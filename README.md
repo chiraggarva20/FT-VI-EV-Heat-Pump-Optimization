@@ -164,12 +164,13 @@ un_task6.py) comprising low-stage compression from {evap}$ to intermediate press
   - Intermediate pressure investigated between 3.5 and 6.0 MPa (geometric mean $\sqrt{P_{evap} P_{dis}} \approx 4.66\text{ MPa}$).
   - Intercooler heat rejection duty: {ic} = \dot{m}(h_2 - h_3)$.
 - **Intercooler Heat Management Architectures:**
-  1. *Option 1 (No Recovery):* Rejects {ic}$ to ambient air; useful heating is gas cooler only:  = Q_{gc} = \dot{m}(h_4 - h_5)$.
-  2. *Option 2 (Heat Recovery):* Uses {ic}$ to preheat fresh cabin ventilation air:  = Q_{gc} + Q_{ic}$.
+  1. *Option 1 (No Recovery - Reject):* Rejects {ic}$ to ambient air; useful heating is gas cooler only:  = Q_{gc} = \dot{m}(h_4 - h_5)$.
+  2. *Option 2 (Heat Recovery - Recover):* Uses {ic}$ to preheat fresh cabin ventilation air:  = Q_{gc} + Q_{ic}$.
 - **Key Findings:**
-  - Intercooling delivers the lowest compressor discharge temperatures of all systems ({dis} = 87.2\ ^\circ\text{C}$, 33.2 K below Case A).
-  - Without heat recovery (Option 1), COP severely degrades ( = 2.275$, -12.3 % vs Case A) and capacity drops to 4.01 kW (fails 5.0 kW target at 4000 rpm).
-  - With heat recovery (Option 2), COP reaches .745$ (+5.8 % vs Case A), but requires an additional cabin-air heat exchanger loop. At extreme cold ($-15\ ^\circ\text{C}$), it requires higher compressor speed ( = 4750\text{ rpm}$) to satisfy 5.0 kW.
+  - Intercooling delivers the lowest compressor discharge temperatures of all systems ({dis} = 67.0\text{--}70.8\ ^\circ\text{C}$, > 50 K below Case A).
+  - Without heat recovery (Option 1), COP severely degrades ( = 2.542$, -2.1 % vs Case A at $-10\ ^\circ\text{C}$) and behaves like an un-intercooled cycle ({ic} \approx 0.03\text{ kW}$).
+  - With heat recovery (Option 2), COP reaches .824$ at $-10\ ^\circ\text{C}$ (+8.8 % vs Case A, +5.0 % vs Case B 100% EEV), but this advantage strictly relies on an idealized 5 K approach temperature and delivering all 1.52 kW of intercooler heat to cabin air.
+  - Crucially, Case C requires significantly higher compressor speeds to meet the 5.0 kW load ( = 4203\text{ rpm}$ at $-10\ ^\circ\text{C}$ and  = 4800\text{ rpm}$ at $-15\ ^\circ\text{C}$, compared to only \text{ rpm}$ and \text{ rpm}$ for Case B FT-VI).
 
 ---
 
@@ -179,31 +180,31 @@ un_task6.py) comprising low-stage compression from {evap}$ to intermediate press
 
 | Ambient | Metric | Case A (Baseline) | Case B (FT-VI Nominal) | Case B (FT-VI Optimized) | Case C (Intercooled, Recov) |
 | :---: | :--- | :---: | :---: | :---: | :---: |
-| **$-5\ ^\circ\text{C}$** | $ [kW] | 5.66 | 6.51 (+15.1 %) | **6.87 (+21.4 %)** | 5.51 (-2.6 %) |
-| | $ [-] | 2.81 | 2.86 (+1.7 %) | 2.90 (+3.1 %) | **2.96 (+5.2 %)** |
-| | {dis}$ [°C] | 111.5 | 106.5 (-5.0 K) | 104.7 (-6.7 K) | **87.2 (-24.3 K)** |
+| **$-5\ ^\circ\text{C}$** | $ [kW] | 5.66 | 6.51 (+15.1 %) | **6.87 (+21.4 %)** | 5.40 (-4.6 %) |
+| | $ [-] | 2.81 | 2.86 (+1.7 %) | 2.90 (+3.1 %) | **3.08 (+9.6 %)** |
+| | {dis}$ [°C] | 111.5 | 106.5 (-5.0 K) | 104.7 (-6.7 K) | **67.0 (-44.5 K)** |
 | | Feasible? | **Yes** | **Yes** | **Yes** | **Yes** |
-| **$-10\ ^\circ\text{C}$** | $ [kW] | 5.00 | 6.20 (+24.1 %) | **7.05 (+41.0 %)** | 4.84 (-3.3 %) |
-| *(Design)* | $ [-] | 2.595 | 2.671 (+2.9 %) | 2.742 (+5.7 %) | **2.745 (+5.8 %)** |
-| | {dis}$ [°C] | 120.4 | 111.6 (-8.8 K) | 107.5 (-12.9 K) | **87.2 (-33.2 K)** |
+| **$-10\ ^\circ\text{C}$** | $ [kW] | 5.00 | 6.20 (+24.1 %) | **7.05 (+41.0 %)** | 4.76 (-4.8 %) |
+| *(Design)* | $ [-] | 2.595 | 2.671 (+2.9 %) | 2.742 (+5.7 %) | **2.824 (+8.8 %)** |
+| | {dis}$ [°C] | 120.4 | 111.6 (-8.8 K) | 107.5 (-12.9 K) | **68.7 (-51.7 K)** |
 | | Feasible? | **Yes** | **Yes** | **Yes** | Fails {load}$ at 4000 rpm |
-| **$-15\ ^\circ\text{C}$** | $ [kW] | 4.39 (fails) | 5.84 (+33.2 %) | **6.24 (+42.2 %)** | 4.21 (fails) |
-| *(Extreme)* | $ [-] | 2.407 | 2.496 (+3.7 %) | 2.524 (+4.9 %) | **2.559 (+6.3 %)** |
-| | {dis}$ [°C] | 130.2 (violates) | 117.6 (-12.6 K) | 115.9 (-14.3 K) | **87.2 (-43.0 K)** |
+| **$-15\ ^\circ\text{C}$** | $ [kW] | 4.39 (fails) | 5.84 (+33.2 %) | **6.24 (+42.2 %)** | 4.17 (fails) |
+| *(Extreme)* | $ [-] | 2.407 | 2.496 (+3.7 %) | 2.524 (+4.9 %) | **2.601 (+8.1 %)** |
+| | {dis}$ [°C] | 130.2 (violates) | 117.6 (-12.6 K) | 115.9 (-14.3 K) | **70.8 (-59.4 K)** |
 | | Feasible? | **No** (fails $ & {dis}$) | **Yes** | **Yes** | Fails {load}$ at 4000 rpm |
 
 #### 2. Load-Matched Speed Comparison (Exact  = 5.00\text{ kW}$ Delivery)
 
 | Ambient | Metric | Case A (Baseline) | Case B (FT-VI Nominal) | Case B (FT-VI Optimized) | Case C (Intercooled, Recov) |
 | :---: | :--- | :---: | :---: | :---: | :---: |
-| **$-10\ ^\circ\text{C}$** | Speed $ [rpm] | 4000 | 3032 (-24.2 %) | **2800 (-30.0 %)** | 4140 (+3.5 %) |
-| *(Design)* | Work $ [kW] | 1.926 | 1.871 (-2.9 %) | **1.854 (-3.8 %)** | 1.823 (-5.4 %) |
-| | $ [-] | 2.595 | 2.673 | 2.697 | **2.745** |
-| | {dis}$ [°C] | 120.4 | 110.3 (-10.1 K) | 108.9 (-11.5 K) | **87.2 (-33.2 K)** |
-| **$-15\ ^\circ\text{C}$** | Speed $ [rpm] | 4555 (violates {dis}$) | 3276 (-28.1 %) | **3197 (-29.8 %)** | 4750 (+4.3 %) |
-| *(Extreme)* | Work $ [kW] | 2.079 | 2.001 (-3.8 %) | **1.996 (-4.0 %)** | 1.954 (-6.0 %) |
-| | $ [-] | 2.405 | 2.499 | 2.505 | **2.559** |
-| | {dis}$ [°C] | 130.4 (exceeds 130 °C) | 116.5 (-13.9 K) | 116.8 (-13.6 K) | **87.2 (-43.2 K)** |
+| **$-10\ ^\circ\text{C}$** | Speed $ [rpm] | 4000 | 3032 (-24.2 %) | **2800 (-30.0 %)** | 4203 (+5.1 %) |
+| *(Design)* | Work $ [kW] | 1.926 | 1.871 (-2.9 %) | 1.854 (-3.8 %) | **1.770 (-8.1 %)** |
+| | $ [-] | 2.595 | 2.673 | 2.697 | **2.824** |
+| | {dis}$ [°C] | 120.4 | 110.3 (-10.1 K) | 108.9 (-11.5 K) | **68.7 (-51.7 K)** |
+| **$-15\ ^\circ\text{C}$** | Speed $ [rpm] | 4555 (violates {dis}$) | 3276 (-28.1 %) | **3197 (-29.8 %)** | 4800 (+5.4 %) |
+| *(Extreme)* | Work $ [kW] | 2.079 | 2.001 (-3.8 %) | 1.996 (-4.0 %) | **1.922 (-7.6 %)** |
+| | $ [-] | 2.405 | 2.499 | 2.505 | **2.601** |
+| | {dis}$ [°C] | 130.4 (exceeds 130 °C) | 116.5 (-13.9 K) | 116.8 (-13.6 K) | **70.8 (-59.6 K)** |
 
 ---
 

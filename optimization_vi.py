@@ -37,6 +37,7 @@ Student 5 Core Capabilities:
 Units: P [MPa], T [degC], h [kJ/kg], s [kJ/kg-K], m [kg/s], W/Q [kW], N [rpm], phi [0..1].
 """
 
+import os
 import math
 import numpy as np
 from config import BRIEF, ASSUME, SENS_AMBIENTS
@@ -49,6 +50,7 @@ import compressor_vi as cv
 import two_stage_intercooled as tsi
 
 props = get_props()
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 # ======================================================================================
@@ -281,7 +283,7 @@ def compare_architectures(T_amb=-10.0,
                           P_FT_opt=4.25,
                           phi_opt=1.0,
                           P_i_case_c=4.5,
-                          T_ic_case_c=20.0):
+                          T_ic_case_c=25.0):
     """
     Compares all four key thermodynamic architectures at given ambient condition:
       - Case A: Baseline conventional cycle (Student 1) with realistic compressor map
@@ -307,12 +309,12 @@ def compare_architectures(T_amb=-10.0,
 
     # Case C (Intercooled without recovery)
     res_C_norec = tsi.case_c(T_amb=T_amb, P_i=P_i_case_c, T_ic=T_ic_case_c, N=N, V_disp=V,
-                             recover_intercooler=False)
+                             mode="reject")
     res_C_norec["case"] = "Case C (Two-Stage IC, No Recovery)"
 
     # Case C (Intercooled with recovery)
     res_C_rec = tsi.case_c(T_amb=T_amb, P_i=P_i_case_c, T_ic=T_ic_case_c, N=N, V_disp=V,
-                           recover_intercooler=True)
+                           mode="recover")
     res_C_rec["case"] = "Case C (Two-Stage IC, With Recovery)"
 
     all_cases = [res_A, res_B, res_B_opt, res_C_norec, res_C_rec]
@@ -344,22 +346,53 @@ def load_matched_comparison(T_amb=-10.0, Q_target=BRIEF["Q_load"]):
     res_Bopt["case"] = "Case B (FT-VI Optimized)"
     res_Bopt["N_matched"] = N_Bopt
 
-    # 4. Case C (Student 6) Without Recovery
-    def solve_case_c(recover):
-        for n_test in np.linspace(2500, 8000, 551):
-            r = tsi.case_c(T_amb=T_amb, P_i=4.5, T_ic=20.0, N=n_test, V_disp=V,
-                           recover_intercooler=recover)
-            if r["Q_h"] >= Q_target:
-                r["N_matched"] = n_test
-                return n_test, r
-        return None, None
+    # 4. Case C (Student 6) from official handover if available, else simulate
+    res_Cnorec = None
+    res_Crec = None
+    handover_csv = os.path.join(HERE, "results_task6", "case_c_comparison.csv")
+    if os.path.exists(handover_csv):
+        import csv
+        with open(handover_csv, "r") as f:
+            for row in csv.DictReader(f):
+                if abs(float(row["T_amb"]) - T_amb) < 1e-4:
+                    if row["case"] == "C (reject)":
+                        res_Cnorec = {
+                            "case": "Case C (Two-Stage IC, No Recovery)",
+                            "N_matched": float(row["N_required"]),
+                            "Q_h": float(row["Q_h"]),
+                            "W": float(row["W"]),
+                            "COP_h": float(row["COP_h"]),
+                            "T_dis": float(row["T_dis"]),
+                            "feasible": row["feasible"] == "True"
+                        }
+                    elif row["case"] == "C (recover)":
+                        res_Crec = {
+                            "case": "Case C (Two-Stage IC, With Recovery)",
+                            "N_matched": float(row["N_required"]),
+                            "Q_h": float(row["Q_h"]),
+                            "W": float(row["W"]),
+                            "COP_h": float(row["COP_h"]),
+                            "T_dis": float(row["T_dis"]),
+                            "feasible": row["feasible"] == "True"
+                        }
 
-    N_Cnorec, res_Cnorec = solve_case_c(recover=False)
-    if res_Cnorec:
-        res_Cnorec["case"] = "Case C (Two-Stage IC, No Recovery)"
-    N_Crec, res_Crec = solve_case_c(recover=True)
-    if res_Crec:
-        res_Crec["case"] = "Case C (Two-Stage IC, With Recovery)"
+    if res_Cnorec is None or res_Crec is None:
+        def solve_case_c(mode):
+            try:
+                r = tsi.solve_for_load(T_amb=T_amb, P_i=4.5, T_ic=25.0, mode=mode, Q_target=Q_target)
+                r["N_matched"] = r["N"]
+                return r["N"], r
+            except Exception:
+                return None, None
+
+        if res_Cnorec is None:
+            _, res_Cnorec = solve_case_c(mode="reject")
+            if res_Cnorec:
+                res_Cnorec["case"] = "Case C (Two-Stage IC, No Recovery)"
+        if res_Crec is None:
+            _, res_Crec = solve_case_c(mode="recover")
+            if res_Crec:
+                res_Crec["case"] = "Case C (Two-Stage IC, With Recovery)"
 
     cases = [c for c in [res_A, res_B, res_Bopt, res_Cnorec, res_Crec] if c is not None]
     return cases
