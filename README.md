@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
  
 ## Project Overview
-This repository contains a steady-state thermodynamic model evaluating a transcritical CO₂ (R744) heat pump designed for Electric Vehicle (EV) cabin heating in cold weather (down to -15 °C and -20 °C).
+This repository contains a steady-state thermodynamic model evaluating a transcritical CO₂ (R744) heat pump designed for Electric Vehicle (EV) cabin heating in cold weather (design ambient -10 °C, with -5 °C and -15 °C sensitivity cases).
  
 The project evaluates and compares three system architectures:
 1. **Case A (Baseline):** A conventional single-stage vapor-compression heat pump cycle.
@@ -91,9 +91,7 @@ The realistic compressor changes the design-point answer by under 1 %, because t
 | Ambient | Case A at 4000 rpm | Case B at 4000 rpm, `phi = 50 %` | Speed for 5.0 kW: A / B |
 | :---: | :--- | :--- | :--- |
 | `-10 °C` | `Q_h = 5.00`, `COP = 2.60`, `T_dis = 120` — feasible | `Q_h = 6.20`, `COP = 2.67`, `T_dis = 112` — feasible | 4000 / 3030 rpm |
-| `-15 °C` | `Q_h = 4.39`, `T_dis = 130.3` — **fails** `Q_h` and `T_dis` | `Q_h = 5.84`, `COP = 2.50`, `T_dis = 118` — feasible | 4555 (`T_dis` at limit) / 3280 rpm |
-| `-20 °C` | `Q_h = 3.82`, `T_dis = 141` — **fails** | `Q_h = 5.31`, `COP = 2.33`, `T_dis = 126` — feasible | 5220 (`T_dis = 142`) / 3770 rpm |
-| `-25 °C` | `Q_h = 3.29`, `T_dis = 153` — **fails** | `Q_h = 4.58`, `T_dis = 137` — **fails** | not feasible / 4370 rpm (`T_dis = 137`) |
+| `-15 °C` | `Q_h = 4.39`, `T_dis = 130.3` — **fails** `Q_h` and `T_dis` | `Q_h = 5.84`, `COP = 2.50`, `T_dis = 130.3` — feasible | 4555 (`T_dis` at limit) / 3280 rpm |
  
 - **FT-VI rescues feasibility in extreme cold:** at 4000 rpm Case A stays feasible down to `-10 °C`, Case B down to `-20 °C`. At `-25 °C` neither does with `P_dis = 9.5 MPa`; `P_dis` and `N` must be co-optimized (Student 5).
 - **At equal 5 kW output, Case B needs 24–28 % less speed** between `-10 °C` and `-20 °C`, runs 13–16 K cooler at `-15 °C` and `-20 °C`, and has `COP_h` 3–4 % higher.
