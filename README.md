@@ -1,1 +1,0 @@
-# FT-VI-EV-Heat-Pump-Optimization
