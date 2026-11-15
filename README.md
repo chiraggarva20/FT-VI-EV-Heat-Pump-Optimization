@@ -246,7 +246,8 @@ Vapor-Injection-Heat-Pump-Optimization-for-Electric-Vehicle-Cold-Weather-Perform
 │                            #   recommended state table, architecture comparisons, load-matched benchmarks) + T5_optima_summary.json
 ├── /figures_task5/          # Task 5 publication figures (3D Pareto surface, 2D trade-offs, parametric effects,
 │                            #   P-h cycle overlay, architecture comparison bars, TOPSIS decision landscape, residuals)
-└── /RESULTS/student6/       # Task 6 Case C sweep data, optima tables, and figures
+├── /results_task6/          # Task 6 Case C sweep, optima, A/B/C comparison CSVs + hand-over JSON (Tarang Gupta)
+└── /figures_task6/          # Task 6 pressure sweep, intercooler-temperature sensitivity, A/B/C comparison plots
 `
 
 ## How to Run
@@ -257,7 +258,7 @@ python run_all.py       # Tasks 1 & 2  -> results/, figures/
 python run_task3.py     # Task 3       -> results_task3/, figures_task3/
 python run_task4.py     # Task 4       -> results_task4/, figures_task4/
 python run_task5.py     # Task 5       -> results_task5/, figures_task5/
-python run_task6.py     # Task 6       -> RESULTS/student6/
+python run_task6.py     # Task 6       -> results_task6/, figures_task6/
 `
 Set CO2_BACKEND=PR to force the built-in Peng–Robinson backend (small offsets in absolute numbers; see the backend note in Phase 1).
 
