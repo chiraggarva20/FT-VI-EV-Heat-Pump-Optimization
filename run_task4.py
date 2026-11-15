@@ -6,12 +6,12 @@ Outputs go to  results_task4/  and  figures_task4/
 Studies
   0  design point (Case A / Case B, constant-eta vs realistic map) + regression check vs Student 3
   1  compressor map  eta_is(N, PR),  eta_v(N, xi)
-  2  cold-weather comparison  T_amb = -25 ... 0 degC, fixed 4000 rpm
+  2  cold-weather comparison  T_amb = -5 (sens.), -10 (design), -15 (sens.) degC, fixed 4000 rpm
   3  load-matched speed (lowest rpm that delivers 5.0 kW) and the power it costs
   4  stage-work breakdown vs P_FT and EEV opening
-  5  compressor speed sweep 2500-8000 rpm
-  6  discharge-pressure sweep 7.5-12.5 MPa
-  7  operating envelopes (T_amb x N) and (P_FT x P_dis)
+  5  compressor speed sweep 2500-8000 rpm (sensitivity at -5 and -15 degC)
+  6  discharge-pressure sweep 7.5-12.5 MPa (sensitivity at -5 and -15 degC)
+  7  operating envelopes (T_amb -15...-5 degC x N) and (P_FT x P_dis)
   8  design-point state table + P-h diagram
   9  hand-over to Student 5
 """
@@ -85,7 +85,8 @@ def col(rows, k):
 
 
 R = {"backend": props.name}
-TAMB = np.arange(-25.0, 0.1, 2.5)
+TAMB = np.array(sorted(SENS_AMBIENTS, reverse=True), dtype=float)   # -5, -10, -15 degC: design case + the two sensitivity cases of the brief
+TAMB_MAP = np.arange(-15.0, -4.99, 1.0)                             # continuous map axis, same -15...-5 degC range
 COLS = ["case", "T_amb", "T_evap", "P_evap", "P_FT", "P_port", "P_dis", "N", "phi", "eta_is1", "eta_is2", "eta_is",
         "eta_v", "x", "xi", "m_suc", "m_inj", "m_tot", "Q_h", "W", "W1", "W2", "COP_h", "T_dis",
         "T_dis_margin", "Q_margin", "T_dis_ok", "P_dis_ok", "N_ok", "Q_ok", "feasible", "violations"]
@@ -124,7 +125,7 @@ R["design_point"] = {r["case"].strip(): dict(Q_h=r["Q_h"], W=r["W"], COP_h=r["CO
 
 val = []
 for (Ta, p, f, n, Pd) in [(-10, 4.5, 0.5, 4000, 9.5), (-10, 3.5, 0.2, 4000, 9.5), (-15, 6.0, 1.0, 2500, 9.5),
-                          (-5, 4.0, 0.7, 8000, 10.5), (-20, 4.5, 0.5, 5000, 9.0), (-10, 4.5, 0.0, 4000, 9.5)]:
+                          (-5, 4.0, 0.7, 8000, 10.5), (-15, 4.5, 0.5, 5000, 9.0), (-10, 4.5, 0.0, 4000, 9.5)]:
     Te = bc.evap_temperature(Ta)
     s3 = fe.ftvi_eev(phi=f, P_FT=p, T_evap=Te, N=n, P_dis=Pd)
     s4 = cv.ftvi_real(phi=f, P_FT=p, T_evap=Te, N=n, P_dis=Pd, realistic=False)
@@ -161,10 +162,8 @@ cwA = [r for r in CW if r["case"] == "A"]; cwB = [r for r in CW if r["case"] == 
 R["cold_weather_4000rpm"] = {f"{r['T_amb']:g}": dict(A=dict(Q=a["Q_h"], COP=a["COP_h"], T=a["T_dis"], feas=a["violations"]),
                                                       B50=dict(Q=r["Q_h"], COP=r["COP_h"], T=r["T_dis"], feas=r["violations"]))
                             for a, r in zip(cwA, cwB)}
-R["lowest_feasible_Tamb_4000rpm"] = dict(
-    A=min([r["T_amb"] for r in cwA if r["feasible"]], default=None),
-    B50=min([r["T_amb"] for r in cwB if r["feasible"]], default=None),
-    B100=min([r["T_amb"] for r in cwB1 if r["feasible"]], default=None))
+R["feasible_4000rpm"] = {f"{a['T_amb']:g}": dict(A=a["feasible"], B50=b["feasible"], B100=c["feasible"])
+                        for a, b, c in zip(cwA, cwB, cwB1)}
 
 # ======================================================================================
 # 3. Load matching : lowest rpm that delivers 5.0 kW
@@ -196,7 +195,7 @@ R["stage_work_best_COP"] = dict(P_FT=best["P_FT"], phi=best["phi"], COP=best["CO
 # 5. Speed sweep
 # ======================================================================================
 NS = np.arange(2500.0, 8000.1, 250.0)
-SP_T = [-10.0, -15.0, -20.0]
+SP_T = [-5.0, -15.0]
 SP = []
 for Ta in SP_T:
     for n in NS:
@@ -207,7 +206,7 @@ save_csv("T4_speed_sweep.csv", SP, COLS)
 # 6. Discharge-pressure sweep
 # ======================================================================================
 PD = np.arange(7.5, 12.51, 0.25)
-PD_T = [-10.0, -15.0]
+PD_T = [-5.0, -15.0]
 PS = []
 for Ta in PD_T:
     for pd_ in PD:
@@ -224,7 +223,7 @@ for Ta in PD_T:
 # ======================================================================================
 NE = np.arange(2500.0, 8000.1, 250.0)
 EV1 = []
-for Ta in TAMB:
+for Ta in TAMB_MAP:
     for n in NE:
         EV1 += [caseA(Ta, N=float(n)), caseB(Ta, 0.5, N=float(n))]
 save_csv("T4_envelope_Tamb_N.csv", EV1, COLS)
@@ -262,8 +261,8 @@ R["state_table"] = st
 tests = []
 for (Ta, p, f, n, d) in [(-10, 4.5, 0.5, 4000, 9.5), (-10, 4.5, 1.0, 4000, 9.5), (-10, 3.5, 0.5, 4000, 9.5),
                          (-10, 6.0, 0.3, 4000, 9.5), (-5, 4.5, 0.5, 4000, 9.5), (-15, 6.0, 1.0, 4000, 9.5),
-                         (-15, 4.5, 0.5, 6000, 9.5), (-10, 5.0, 0.8, 8000, 9.5), (-20, 4.5, 0.5, 5000, 9.5),
-                         (-25, 4.5, 1.0, 4000, 9.5)]:
+                         (-15, 4.5, 0.5, 6000, 9.5), (-10, 5.0, 0.8, 8000, 9.5), (-5, 6.0, 0.3, 2500, 9.5),
+                         (-15, 3.5, 0.5, 4000, 9.5)]:
     r = cv.ftvi_real(phi=f, P_FT=p, T_evap=bc.evap_temperature(Ta), N=n, P_dis=d)
     tests.append(dict(T_amb=Ta, P_FT=p, phi=f, N=n, P_dis=d, m_suc=r["m_suc"], m_inj=r["m_inj"], xi=r["xi"],
                       eta_is1=r["eta_is1"], eta_is2=r["eta_is2"], eta_v=r["eta_v"], W1=r["W1"], W2=r["W2"], W=r["W"],
@@ -284,7 +283,8 @@ handover = dict(
     decision_variable_ranges=dict(P_FT_MPa=[3.5, 6.0], phi=[0.0, 1.0], N_rpm=[BRIEF["N_min"], BRIEF["N_max"]]),
     notes=["m_suc and m_inj are coupled (back-leakage) and solved by fixed-point iteration inside ftvi_real",
            "ftvi_real(realistic=False) reproduces ftvi_eev.ftvi_eev exactly (regression check)",
-           "at T_amb = -25 degC no (P_FT, phi) at P_dis = 9.5 MPa meets both T_dis and Q_h: P_dis / N must be co-optimised"],
+           "ambient cases follow the brief: design -10 degC, sensitivity -5 and -15 degC; at -15 degC Case A (4000 rpm, 9.5 MPa) "
+           "violates Q_h and T_dis while Case B is feasible"],
     test_cases=tests,
 )
 with open(os.path.join(RES, "T4_handover_student5.json"), "w") as f:
@@ -307,7 +307,7 @@ a = ax[1]
 Ng = np.arange(2000.0, 8000.1, 100.0)
 a.plot(Ng, [cv.stage_efficiency(n, cv.PR1_REF, cv.PR1_REF) for n in Ng], color=CAT[2], label="stage 1 (PR 1.5)")
 a.plot(Ng, [cv.stage_efficiency(n, cv.PR2_REF, cv.PR2_REF) for n in Ng], color=CAT[0], label="stage 2 (PR 2.77)", ls="--")
-for Ta, c_ in ((-20.0, CAT[1]),):
+for Ta, c_ in ((-15.0, CAT[1]),):
     Pe = props.Psat(bc.evap_temperature(Ta)); Pp = eev.port_pressure(Pe)
     a.plot(Ng, [cv.stage_efficiency(n, Pp / Pe, cv.PR1_REF) for n in Ng], color=c_, lw=1.2, label=f"stage 1 at {Ta:g} degC")
     a.plot(Ng, [cv.stage_efficiency(n, BRIEF["P_dis"] / Pp, cv.PR2_REF) for n in Ng], color=c_, lw=1.2, ls="--", label=f"stage 2 at {Ta:g} degC")
@@ -390,12 +390,12 @@ fig, ax = plt.subplots(1, 3, figsize=(11.6, 3.7))
 cmap = ListedColormap(["#e8e7e0", "#a6dcc4"])
 for a, c_, ttl in ((ax[0], "A", "a  Case A: feasible region"), (ax[1], "B50", "b  Case B: feasible region")):
     rows = [r for r in EV1 if r["case"] == c_]
-    Z = np.array([[next(r for r in rows if r["T_amb"] == Ta and r["N"] == n) for n in NE] for Ta in TAMB], dtype=object)
+    Z = np.array([[next(r for r in rows if r["T_amb"] == Ta and r["N"] == n) for n in NE] for Ta in TAMB_MAP], dtype=object)
     feas = np.vectorize(lambda r: float(r["feasible"]))(Z)
     Qh = np.vectorize(lambda r: r["Q_h"])(Z); Td = np.vectorize(lambda r: r["T_dis"])(Z)
-    a.pcolormesh(NE, TAMB, feas, cmap=cmap, vmin=0, vmax=1, shading="nearest")
-    cs1 = a.contour(NE, TAMB, Qh, levels=[BRIEF["Q_load"]], colors=[CAT[0]], linewidths=1.4)
-    cs2 = a.contour(NE, TAMB, Td, levels=[BRIEF["T_dis_max"]], colors=[CAT[1]], linewidths=1.4)
+    a.pcolormesh(NE, TAMB_MAP, feas, cmap=cmap, vmin=0, vmax=1, shading="nearest")
+    cs1 = a.contour(NE, TAMB_MAP, Qh, levels=[BRIEF["Q_load"]], colors=[CAT[0]], linewidths=1.4)
+    cs2 = a.contour(NE, TAMB_MAP, Td, levels=[BRIEF["T_dis_max"]], colors=[CAT[1]], linewidths=1.4)
     a.clabel(cs1, fmt="Q = 5 kW", fontsize=7); a.clabel(cs2, fmt="T = 130 C", fontsize=7)
     a.set_xlabel("compressor speed [rpm]"); a.set_ylabel("ambient temperature [degC]"); a.set_title(ttl); a.grid(False)
 a = ax[2]
@@ -417,7 +417,7 @@ for a, (k, yl, ttl) in zip(ax, (("N_req", "speed to deliver 5.0 kW [rpm]", "a  r
         rows = [r for r in LM if r["case"] == c_ and r["reaches_load"]]
         a.plot(col(rows, "T_amb"), col(rows, k), color=col_, marker="o", ms=3)
         end_label(a, rows[0]["T_amb"], rows[0][k], lab, col_)
-    a.set_xlabel("ambient temperature [degC]"); a.set_ylabel(yl); a.set_title(ttl); a.set_xlim(-28, 1)
+    a.set_xlabel("ambient temperature [degC]"); a.set_ylabel(yl); a.set_title(ttl); a.set_xlim(-16.5, -3.5)
     if k == "N_req": limit_line(a, BRIEF["N_max"], "8000 rpm limit", "right", "top")
     if k == "T_dis": limit_line(a, BRIEF["T_dis_max"], "130 degC limit", "right", "bottom")
 fig.tight_layout(); fig_save(fig, "fig_T4_7_load_matched.png")
@@ -456,9 +456,9 @@ print("\nCold weather @4000 rpm (A | B50 | B100):")
 for a_, b_, c_ in zip(cwA, cwB, cwB1):
     print("  %6.1f  A Q%.2f COP%.2f T%.0f [%s] | B Q%.2f COP%.2f T%.0f [%s] | B100 Q%.2f T%.0f" % (
         a_["T_amb"], a_["Q_h"], a_["COP_h"], a_["T_dis"], a_["violations"], b_["Q_h"], b_["COP_h"], b_["T_dis"], b_["violations"], c_["Q_h"], c_["T_dis"]))
-print("Lowest feasible ambient @4000 rpm:", R["lowest_feasible_Tamb_4000rpm"])
+print("Feasible @4000 rpm:", R["feasible_4000rpm"])
 print("\nLoad-matched speed (5.0 kW):")
-for Ta in (-5.0, -10.0, -15.0, -20.0, -25.0):
+for Ta in TAMB:
     s = []
     for c_ in ("A", "B50"):
         r = next(r for r in LM if r["T_amb"] == Ta and r["case"] == c_)
