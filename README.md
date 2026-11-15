@@ -1,7 +1,6 @@
 # Vapor-Injection-Heat-Pump-Optimization-for-Electric-Vehicle-Cold-Weather-Performance
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![CoolProp](https://img.shields.io/badge/CoolProp-6.4.3-green.svg)](http://www.coolprop.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
  
 ## Project Overview
 This repository contains a steady-state thermodynamic model evaluating a transcritical CO₂ (R744) heat pump designed for Electric Vehicle (EV) cabin heating in cold weather (design ambient -10 °C, with -5 °C and -15 °C sensitivity cases).
