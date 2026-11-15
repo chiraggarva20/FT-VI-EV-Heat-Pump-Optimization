@@ -341,12 +341,14 @@ for a, (k, yl, ttl) in zip(ax.ravel(), (("W1", "stage-1 power [kW]", "a  W1 (low
                                           ("COP_h", "COP_h [-]", "c  COP_h"), ("T_dis", "discharge temperature [degC]", "d  T_dis"))):
     for i, f in enumerate(PHIS):
         rows = [r for r in SW if r["phi"] == f]
-        a.plot(col(rows, "P_FT"), col(rows, k), color=BLUE_ORD[i + 1], marker="o", ms=3)
-        end_label(a, rows[-1]["P_FT"], rows[-1][k], f"{f*100:.0f} %", BLUE_ORD[i + 1])
-    a.set_xlabel("flash-tank pressure P_FT [MPa]"); a.set_ylabel(yl); a.set_title(ttl); a.set_xlim(3.4, 6.5)
+        a.plot(col(rows, "P_FT"), col(rows, k), color=BLUE_ORD[i + 1], marker="o", ms=3, label=f"{f*100:.0f} %")
+        
+    a.set_xlabel("flash-tank pressure P_FT [MPa]"); a.set_ylabel(yl); a.set_title(ttl); a.set_xlim(3.4, 6.2)
     if k == "T_dis": limit_line(a, BRIEF["T_dis_max"], "130 degC limit", "left", "top")
 fig.suptitle("Stage-work split vs P_FT and EEV opening (-10 degC, 4000 rpm)", fontsize=10, fontweight="bold")
-fig.tight_layout(); fig_save(fig, "fig_T4_3_stage_work.png")
+h_, l_ = ax[0, 0].get_legend_handles_labels()
+fig.legend(h_, l_, loc="lower center", ncol=len(l_), title="EEV opening", fontsize=8, title_fontsize=8)
+fig.tight_layout(rect=[0, 0.07, 1, 1]); fig_save(fig, "fig_T4_3_stage_work.png")
 
 # ---- Fig 4 : speed sweep --------------------------------------------------------------------
 fig, ax = plt.subplots(2, 2, figsize=(9.4, 6.4))
@@ -360,14 +362,17 @@ for a, (k, yl, ttl) in zip(ax.ravel(), (("Q_h", "heating capacity [kW]", "a  Q_h
             else:
                 y = col(rows, k)
             a.plot(col(rows, "N"), y, color=CAT[i], ls=ls, lw=1.6)
-        end_label(a, NS[-1], [r for r in SP if r["T_amb"] == Ta and r["case"] == "B50"][-1][k], f"{Ta:g} degC", CAT[i])
-    a.set_xlabel("compressor speed [rpm]"); a.set_ylabel(yl); a.set_title(ttl); a.set_xlim(2400, 9200)
+        
+    a.set_xlabel("compressor speed [rpm]"); a.set_ylabel(yl); a.set_title(ttl); a.set_xlim(2400, 8100)
     if k == "Q_h": limit_line(a, BRIEF["Q_load"], "5.0 kW target", "left", "bottom")
     if k == "T_dis": limit_line(a, BRIEF["T_dis_max"], "130 degC limit", "left", "bottom")
 ax[0, 0].plot([], [], color=INK2, ls="-", label="Case B (50 %)"); ax[0, 0].plot([], [], color=INK2, ls="--", label="Case A")
 ax[0, 0].legend(loc="upper left", fontsize=7.5)
 fig.suptitle("Compressor speed sweep (9.5 MPa, P_FT = 4.5 MPa)", fontsize=10, fontweight="bold")
-fig.tight_layout(); fig_save(fig, "fig_T4_4_speed_sweep.png")
+from matplotlib.lines import Line2D
+fig.legend([Line2D([0], [0], color=CAT[i], lw=2) for i in range(len(SP_T))], [f"{t:g} degC ambient" for t in SP_T],
+           loc="lower center", ncol=len(SP_T), fontsize=8)
+fig.tight_layout(rect=[0, 0.05, 1, 1]); fig_save(fig, "fig_T4_4_speed_sweep.png")
 
 # ---- Fig 5 : discharge-pressure sweep ---------------------------------------------------------
 fig, ax = plt.subplots(1, 3, figsize=(11.2, 3.5))
@@ -415,11 +420,12 @@ for a, (k, yl, ttl) in zip(ax, (("N_req", "speed to deliver 5.0 kW [rpm]", "a  r
                                   ("T_dis", "discharge temperature [degC]", "c  T_dis at load"))):
     for c_, col_, lab in (("A", C_A, "A"), ("B50", C_B50, "B 50 %"), ("B100", C_B100, "B 100 %")):
         rows = [r for r in LM if r["case"] == c_ and r["reaches_load"]]
-        a.plot(col(rows, "T_amb"), col(rows, k), color=col_, marker="o", ms=3)
-        end_label(a, rows[0]["T_amb"], rows[0][k], lab, col_)
+       a.plot(col(rows, "T_amb"), col(rows, k), color=col_, marker="o", ms=3, label=lab,
+       ls="--" if c_ == "B100" else "-")
     a.set_xlabel("ambient temperature [degC]"); a.set_ylabel(yl); a.set_title(ttl); a.set_xlim(-16.5, -3.5)
     if k == "N_req": limit_line(a, BRIEF["N_max"], "8000 rpm limit", "right", "top")
     if k == "T_dis": limit_line(a, BRIEF["T_dis_max"], "130 degC limit", "right", "bottom")
+    ax[0].legend(loc="center right", fontsize=7.5)
 fig.tight_layout(); fig_save(fig, "fig_T4_7_load_matched.png")
 
 # ---- Fig 8 : P-h diagram (design point, A vs B) ------------------------------------------------
