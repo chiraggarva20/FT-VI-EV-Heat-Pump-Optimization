@@ -1,0 +1,11 @@
+state,description,P_MPa,T_C,h_kJkg,s_kJkgK,phase
+1,Evaporator outlet / Compressor suction,2.290789,-10.0,442.975225,1.949434,Superheated vapor (SH=5K)
+2,Stage-1 compressor discharge,3.436183,23.629762,466.813836,1.973759,Superheated vapor
+7,Flash tank saturated vapor,4.25,7.69166,425.179215,1.799699,Saturated vapor (x=1.0)
+7a,After injection EEV throttling,3.436183,-0.533449,425.179215,1.82619,Superheated vapor (isenthalpic)
+3,Compressor mixing plenum,3.436183,12.638638,452.106905,1.923246,Cooled vapor mixture
+4,Stage-2 compressor discharge,9.5,107.469633,518.926619,1.976894,Supercritical gas
+5,Gas cooler outlet,9.5,35.0,293.464405,1.295683,Dense supercritical fluid
+6,EEV-1 outlet / Flash tank inlet,4.25,7.69166,293.464405,1.330698,Two-phase mixture (x=0.360)
+8,Flash tank liquid outlet to EEV-2,4.25,7.69166,221.526539,1.067392,Saturated liquid (x=0.0)
+9,EEV-2 outlet / Evaporator inlet,2.290789,-15.0,221.526539,1.09185,Two-phase mixture (x=0.207)
