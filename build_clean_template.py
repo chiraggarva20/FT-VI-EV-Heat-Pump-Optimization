@@ -400,8 +400,14 @@ html_content = """<!DOCTYPE html>
   <p>&bull; <em>Expansion Valves (EEVs):</em> Modeled as adiabatic, isenthalpic throttling devices (h_in = h_out).</p>
 
   <p class="no-indent"><em>B. Case A: Single-Stage Baseline Governing Correlations</em></p>
-  <p>The conventional cycle consists of suction state 1 (P_evap, T_evap + &Delta;T_sh), isentropic compression 2s, actual discharge 2, isobaric gas cooling 3, and isenthalpic expansion 4 (h_4 = h_3). The thermal performance is governed by:</p>
+  <p>The conventional cycle consists of suction state 1 (P_evap, T_evap + &Delta;T_sh), isentropic compression 2s, actual discharge 2, isobaric gas cooling 3, and isenthalpic expansion 4 (h_4 = h_3). The schematic layout with state designations and operational boundary conditions is shown in Fig. 1. The thermal performance is governed by:</p>
   
+  <!-- FIGURE 1: Case A Schematic -->
+  <div class="figure-container">
+    <img src="figures/schematic_case_a.png" alt="Case A Cycle Schematic" />
+    <div class="figure-caption"><span class="fig-label">Fig. 1.</span> Case A baseline single-stage transcritical R744 cycle schematic showing refrigerant state designations ①&ndash;④ and operating boundary conditions (T_amb = &minus;10 &deg;C, P_dis = 9.5 MPa, N = 4000 rpm, Q_load = 5.0 kW).</div>
+  </div>
+
   <div class="eq-block">
     <img src="eq_svg/eq1.svg" class="eq-img" alt="Eq 1" />
     <span class="eq-no">(1)</span>
@@ -437,8 +443,14 @@ html_content = """<!DOCTYPE html>
   </div>
 
   <p class="no-indent"><em>C. Case B: Flash-Tank Vapor Injection Governing Correlations</em></p>
-  <p>The FT-VI architecture introduces an intermediate flash tank that phase-separates expanded two-phase refrigerant into saturated vapor (state 7) and saturated liquid (state 8). Saturated liquid expands through the main EEV into the evaporator, providing suction flow &dot;m_suc. Saturated vapor is injected through a secondary injection EEV into the compressor at port pressure P_port, augmenting the total mass flow swallowed by Stage 2 to &dot;m_tot = &dot;m_suc + &dot;m_inj.</p>
+  <p>The FT-VI architecture is illustrated in Fig. 2. It introduces an intermediate flash tank that phase-separates expanded two-phase refrigerant into saturated vapor (state 7) and saturated liquid (state 8). Saturated liquid expands through the main EEV into the evaporator, providing suction flow &dot;m_suc. Saturated vapor is injected through a secondary injection EEV into the compressor at port pressure P_port, augmenting the total mass flow swallowed by Stage 2 to &dot;m_tot = &dot;m_suc + &dot;m_inj.</p>
   
+  <!-- FIGURE 2: Case B Schematic -->
+  <div class="figure-container">
+    <img src="figures/schematic_case_b.png" alt="Case B Cycle Schematic" />
+    <div class="figure-caption"><span class="fig-label">Fig. 2.</span> Case B economized Flash-Tank Vapor Injection (FT-VI) cycle schematic illustrating dual-stage expansion (EEV-1, EEV-2), intermediate flash-tank phase separation, compressible orifice injection valve (EEV_inj), mixing plenum, and refrigerant states ①&ndash;⑨.</div>
+  </div>
+
   <p>The intermediate injection port pressure is coupled to the evaporator pressure:</p>
   <div class="eq-block">
     <img src="eq_svg/eq8.svg" class="eq-img" alt="Eq 8" />
@@ -474,7 +486,14 @@ html_content = """<!DOCTYPE html>
   </div>
 
   <p class="no-indent"><em>D. Case C: Two-Stage Intercooled Cycle Correlations</em></p>
-  <p>In Case C, the compressor is divided into two discrete stages with an intermediate gas cooler (intercooler) rejecting heat &dot;Q_IC:</p>
+  <p>In Case C, the compressor is divided into two discrete stages with an intermediate gas cooler (intercooler) rejecting heat &dot;Q_IC (Fig. 3):</p>
+  
+  <!-- FIGURE 3: Case C Schematic -->
+  <div class="figure-container">
+    <img src="figures/schematic_case_c.png" alt="Case C Cycle Schematic" />
+    <div class="figure-caption"><span class="fig-label">Fig. 3.</span> Case C two-stage intercooled cycle schematic featuring low-stage (C1) and high-stage (C2) compressors, counter-flow intercooler (&dot;Q_IC), and refrigerant states ①&ndash;⑥.</div>
+  </div>
+
   <div class="eq-block">
     <img src="eq_svg/eq14.svg" class="eq-img" alt="Eq 14" />
     <span class="eq-no">(14)</span>
@@ -485,12 +504,12 @@ html_content = """<!DOCTYPE html>
     <img src="eq_svg/eq15.svg" class="eq-img" alt="Eq 15" />
     <span class="eq-no">(15)</span>
   </div>
-  <p>Two intercooler modes are evaluated: <em>Reject</em> (Q_ic rejected to ambient, Q_use = Q_gc) and <em>Recover</em> (cabin air passes intercooler first, then gas cooler: Q_use = Q_gc + Q_ic).</p>
+  <p>Two intercooler modes are evaluated: <em>Reject</em> (Q_ic rejected to ambient, Q_use = Q_gc) and <em>Recover</em> (cabin air passes intercooler first, then gas cooler: Q_use = Q_gc + Q_ic). The thermodynamic state trajectories of all three architectures are comparatively mapped on the carbon dioxide pressure&ndash;enthalpy diagram in Fig. 4.</p>
 
-  <!-- FIGURE 1: P-h Comparison (Single Column) -->
+  <!-- FIGURE 4: P-h Comparison (Single Column) -->
   <div class="figure-container">
     <img src="figures_task5/fig_T5_4_ph_comparison.png" alt="P-h diagram" />
-    <div class="figure-caption"><span class="fig-label">Fig. 1.</span> Pressure&ndash;enthalpy (P&ndash;h) thermodynamic cycle comparison overlay on the R744 saturation dome, contrasting baseline Case A (blue), nominal FT-VI Case B (green), optimized FT-VI Case B (red), and two-stage intercooled Case C (purple).</div>
+    <div class="figure-caption"><span class="fig-label">Fig. 4.</span> Pressure&ndash;enthalpy (P&ndash;h) thermodynamic cycle comparison overlay on the R744 saturation dome, contrasting baseline Case A (blue), nominal FT-VI Case B (green), optimized FT-VI Case B (red), and two-stage intercooled Case C (purple).</div>
   </div>
 
   <!-- SECTION IV -->
@@ -627,17 +646,17 @@ html_content = """<!DOCTYPE html>
     </tbody>
   </table>
 
-  <!-- FIGURE 2: 3D Pareto Frontier (Single Column) -->
+  <!-- FIGURE 5: 3D Pareto Frontier (Single Column) -->
   <div class="figure-container">
     <img src="figures_task5/fig_T5_1_pareto_3d.png" alt="3D Pareto Frontier" />
-    <div class="figure-caption"><span class="fig-label">Fig. 2.</span> 3D Pareto-optimal frontier surface in (COP_h, Q_h, T_dis) space extracted from 7,056 evaluations, highlighting single-objective anchors, TOPSIS points, and the recommended design point.</div>
+    <div class="figure-caption"><span class="fig-label">Fig. 5.</span> 3D Pareto-optimal frontier surface in (COP_h, Q_h, T_dis) space extracted from 7,056 evaluations, highlighting single-objective anchors, TOPSIS points, and the recommended design point.</div>
   </div>
 
-  <!-- FIGURE 3 (Wide Element across both columns) -->
+  <!-- FIGURE 6 (Wide Element across both columns) -->
   <div class="wide-element">
     <div class="figure-container">
       <img src="figures_task5/fig_T5_2_pareto_2d_tradeoffs.png" style="width: 98%; max-height: 2.2in; object-fit: contain;" alt="2D Pareto Projections" />
-      <div class="figure-caption"><span class="fig-label">Fig. 3.</span> 2D Pareto projections illustrating trade-offs between heating COP_h, heating capacity Q_h, and compressor discharge temperature T_dis across the 45 non-dominated solutions.</div>
+      <div class="figure-caption"><span class="fig-label">Fig. 6.</span> 2D Pareto projections illustrating trade-offs between heating COP_h, heating capacity Q_h, and compressor discharge temperature T_dis across the 45 non-dominated solutions.</div>
     </div>
   </div>
 
@@ -681,10 +700,10 @@ html_content = """<!DOCTYPE html>
     </tbody>
   </table>
 
-  <!-- FIGURE 4: Bar Charts (Single Column) -->
+  <!-- FIGURE 7: Bar Charts (Single Column) -->
   <div class="figure-container">
     <img src="figures_task5/fig_T5_5_case_comparison_bars.png" alt="Bar charts comparison" />
-    <div class="figure-caption"><span class="fig-label">Fig. 4.</span> Cross-architecture performance comparison bar charts at &minus;5 &deg;C, &minus;10 &deg;C, and &minus;15 &deg;C ambients under nominal 4000 rpm operation.</div>
+    <div class="figure-caption"><span class="fig-label">Fig. 7.</span> Cross-architecture performance comparison bar charts at &minus;5 &deg;C, &minus;10 &deg;C, and &minus;15 &deg;C ambients under nominal 4000 rpm operation.</div>
   </div>
 
   <p class="no-indent"><em>C. Recommended Design Point &amp; Thermodynamic State Table</em></p>
@@ -725,7 +744,7 @@ html_content = """<!DOCTYPE html>
   </div>
 
   <p class="no-indent"><em>D. Parametric Sensitivity Analysis</em></p>
-  <p>The 9-panel parametric sensitivity map (Fig. 5) demonstrates the isolated and coupled thermodynamic influences of intermediate pressure P_FT, injection valve opening &phi;, and compressor speed N on COP_h, heating capacity Q_h, and discharge temperature T_dis:</p>
+  <p>The 9-panel parametric sensitivity map (Fig. 8) demonstrates the isolated and coupled thermodynamic influences of intermediate pressure P_FT, injection valve opening &phi;, and compressor speed N on COP_h, heating capacity Q_h, and discharge temperature T_dis:</p>
 
   <p>1) <em>Effect of Flash-Tank Pressure P_FT:</em> Increasing P_FT from 3.5 to 4.25 MPa initially improves COP_h because higher flash pressure produces a cooler saturated liquid stream (state 8), expanding the evaporator specific enthalpy drop. However, increasing P_FT beyond 4.75 MPa restricts flash vapor generation, causing injection mass flow to diminish and collapsing the cycle toward baseline single-stage performance.</p>
 
@@ -733,21 +752,21 @@ html_content = """<!DOCTYPE html>
 
   <p>3) <em>Effect of Compressor Speed N:</em> Compressor speed provides direct linear modulation of heating capacity (scaling from 4.5 kW at 2500 rpm up to 13.5 kW at 8000 rpm). Operating at higher speeds incurs isentropic efficiency degradation due to frictional throttling losses, slightly reducing COP.</p>
 
-  <!-- FIGURE 5 (Wide Element across both columns) -->
+  <!-- FIGURE 8 (Wide Element across both columns) -->
   <div class="wide-element">
     <div class="figure-container">
       <img src="figures_task5/fig_T5_3_parametric_effects.png" style="max-height: 4.0in; width: auto; max-width: 90%; display: block; margin: 0 auto;" alt="9-panel parametric effects" />
-      <div class="figure-caption"><span class="fig-label">Fig. 5.</span> 9-panel parametric sensitivity map illustrating the isolated and coupled thermodynamic influences of intermediate pressure P_FT, injection valve opening &phi;, and compressor speed N on COP_h, heating capacity Q_h, and compressor discharge temperature T_dis.</div>
+      <div class="figure-caption"><span class="fig-label">Fig. 8.</span> 9-panel parametric sensitivity map illustrating the isolated and coupled thermodynamic influences of intermediate pressure P_FT, injection valve opening &phi;, and compressor speed N on COP_h, heating capacity Q_h, and compressor discharge temperature T_dis.</div>
     </div>
   </div>
 
   <p class="no-indent"><em>E. Multi-Criteria TOPSIS Decision Landscape</em></p>
-  <p>Fig. 6 illustrates the TOPSIS decision landscape across the 45 non-dominated Pareto designs. When balanced weights are applied (w_COP = 0.40, w_Q = 0.40, w_T = 0.20), the algorithm identifies a high-speed operating point (N = 5800 rpm, P_FT = 4.75 MPa) delivering Q_h = 9.88 kW. However, for continuous automotive cruising where the cabin load is fixed at 5.0 kW, operating at 5800 rpm represents severe overcapacity. The recommended design point at 4000 rpm (and cruising at 2800 rpm) aligns engineering sizing with actual vehicle thermal demand.</p>
+  <p>Fig. 9 illustrates the TOPSIS decision landscape across the 45 non-dominated Pareto designs. When balanced weights are applied (w_COP = 0.40, w_Q = 0.40, w_T = 0.20), the algorithm identifies a high-speed operating point (N = 5800 rpm, P_FT = 4.75 MPa) delivering Q_h = 9.88 kW. However, for continuous automotive cruising where the cabin load is fixed at 5.0 kW, operating at 5800 rpm represents severe overcapacity. The recommended design point at 4000 rpm (and cruising at 2800 rpm) aligns engineering sizing with actual vehicle thermal demand.</p>
 
-  <!-- FIGURE 6: TOPSIS Landscape (Single Column) -->
+  <!-- FIGURE 9: TOPSIS Landscape (Single Column) -->
   <div class="figure-container">
     <img src="figures_task5/fig_T5_6_topsis_decision_landscape.png" alt="TOPSIS Landscape" />
-    <div class="figure-caption"><span class="fig-label">Fig. 6.</span> TOPSIS Multi-Criteria Decision Making (MCDM) closeness landscape across the 45 non-dominated Pareto solutions.</div>
+    <div class="figure-caption"><span class="fig-label">Fig. 9.</span> TOPSIS Multi-Criteria Decision Making (MCDM) closeness landscape across the 45 non-dominated Pareto solutions.</div>
   </div>
 
   <!-- SECTION VIII -->
