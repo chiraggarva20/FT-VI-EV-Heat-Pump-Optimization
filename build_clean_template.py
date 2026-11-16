@@ -520,7 +520,7 @@ html_content = """<!DOCTYPE html>
 
   <!-- SECTION V -->
   <h1 class="ieee-heading">V. Individual &amp; Group Approach</h1>
-  <p>The capstone project was executed across six specialized student roles within the Department of Mechanical Engineering at IIT Bombay. Below, each student's individual technical report summarizes their specific engineering scope, physical models, individual optimizations, key results, and representative figures. At the conclusion of this section, Fig. 7 presents the unified inter-student thermodynamic workflow and integration architecture.</p>
+  <p>The capstone project was executed across six specialized student roles within the Department of Mechanical Engineering at IIT Bombay. Below, each student's individual technical report summarizes their specific engineering scope, physical models, individual optimizations, key results, and representative figures.</p>
 
   <p class="no-indent"><em>A. Student 1: Baseline EV Heat Pump Modeling &amp; Displacement Calibration (Kartik Gupta &mdash; Roll No: 24B2152)</em></p>
   <p><strong>1) Scope &amp; Modeling:</strong> Student 1 developed the baseline single-stage vapor compression heat pump (Case A) operating transcritically with R744. Compressor displacement was calibrated to deliver exactly Q_load = 5.00 kW at T_amb = &minus;10 &deg;C, N = 4000 rpm, and P_dis = 9.5 MPa, establishing V_disp = 8.878 cm&sup3; (with CoolProp Span-Wagner EOS).</p>
@@ -574,17 +574,6 @@ html_content = """<!DOCTYPE html>
   <div class="figure-container">
     <img src="figures_task6/T6_pressure_sweep.png" alt="Student 6 Intercooled Sweeps" />
     <div class="figure-caption"><span class="fig-label">Fig. 6a.</span> Student 6 two-stage intercooled cycle sweeps: intermediate pressure P_i optimization and intercooler heat duty recovery.</div>
-  </div>
-
-  <p class="no-indent"><em>G. Group Contribution &amp; Project Integration Workflow Flowchart</em></p>
-  <p>Fig. 7 synthesizes the collaborative inter-student workflow, highlighting the inputs, models, individual optimizations, and data handovers that culminate in the unified multi-objective Pareto frontier and cross-architecture benchmarking.</p>
-
-  <!-- FIGURE 7: Group Workflow Flowchart (Wide Element across both columns) -->
-  <div class="wide-element">
-    <div class="figure-container">
-      <img src="figures_task5/fig_group_workflow_flowchart.png" style="width: 96%; max-height: 3.5in; object-fit: contain;" alt="Group Workflow Flowchart" />
-      <div class="figure-caption"><span class="fig-label">Fig. 7.</span> Comprehensive ME306 capstone project workflow flowchart illustrating the inter-student dependencies, component model handovers, and system integration leading to the 3D multi-objective Pareto optimization and cross-architecture benchmarking.</div>
-    </div>
   </div>
 
   <!-- SECTION VI -->
