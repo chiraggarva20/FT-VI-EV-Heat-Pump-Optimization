@@ -50,14 +50,10 @@ def air_inlet_temperature(T_amb):
 
 
 def case_c(T_amb=-10.0, P_i=4.5, T_ic=25.0, N=None, V_disp=None, mode="reject",
-           realistic=True, eta_is=None, **kwargs):
+           realistic=True, eta_is=None):
     """One Case C operating point at speed N.  Raises ValueError for a thermodynamically or
     thermally impossible point (outside the pressure window, liquid at stage-2 suction, no
     temperature approach in the intercooler or gas cooler)."""
-    # Backward compatibility with older kwargs if any
-    if "recover_intercooler" in kwargs:
-        mode = "recover" if kwargs["recover_intercooler"] else "reject"
-
     if mode not in ("reject", "recover"):
         raise ValueError("mode must be 'reject' or 'recover'")
     N = BRIEF["N"] if N is None else N

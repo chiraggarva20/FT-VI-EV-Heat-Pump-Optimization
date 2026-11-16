@@ -156,21 +156,17 @@ Applying TOPSIS (Technique for Order Preference by Similarity to Ideal Solution)
 
 ---
 
-### Phase 6: Two-Stage Compression with Intercooling (Student 6 — Tarang Gupta)
-Student 6 models an alternative two-stage transcritical CO₂ cycle (	wo_stage_intercooled.py, 
-un_task6.py) comprising low-stage compression from {evap}$ to intermediate pressure $, isobaric intercooling to {ic}$, high-stage compression to {dis}$, and gas-cooling.
+### Phase 6: Two-Stage Compression with Intercooling (Student 6)
 
-- **Intermediate Pressure & Intercooler Duty:**
-  - Intermediate pressure investigated between 3.5 and 6.0 MPa (geometric mean $\sqrt{P_{evap} P_{dis}} \approx 4.66\text{ MPa}$).
-  - Intercooler heat rejection duty: {ic} = \dot{m}(h_2 - h_3)$.
-- **Intercooler Heat Management Architectures:**
-  1. *Option 1 (No Recovery - Reject):* Rejects {ic}$ to ambient air; useful heating is gas cooler only:  = Q_{gc} = \dot{m}(h_4 - h_5)$.
-  2. *Option 2 (Heat Recovery - Recover):* Uses {ic}$ to preheat fresh cabin ventilation air:  = Q_{gc} + Q_{ic}$.
-- **Key Findings:**
-  - Intercooling delivers the lowest compressor discharge temperatures of all systems ({dis} = 67.0\text{--}70.8\ ^\circ\text{C}$, > 50 K below Case A).
-  - Without heat recovery (Option 1), COP severely degrades ( = 2.542$, -2.1 % vs Case A at $-10\ ^\circ\text{C}$) and behaves like an un-intercooled cycle ({ic} \approx 0.03\text{ kW}$).
-  - With heat recovery (Option 2), COP reaches .824$ at $-10\ ^\circ\text{C}$ (+8.8 % vs Case A, +5.0 % vs Case B 100% EEV), but this advantage strictly relies on an idealized 5 K approach temperature and delivering all 1.52 kW of intercooler heat to cabin air.
-  - Crucially, Case C requires significantly higher compressor speeds to meet the 5.0 kW load ( = 4203\text{ rpm}$ at $-10\ ^\circ\text{C}$ and  = 4800\text{ rpm}$ at $-15\ ^\circ\text{C}$, compared to only \text{ rpm}$ and \text{ rpm}$ for Case B FT-VI).
+Files: `two_stage_intercooled.py` (Case C model), `run_task6.py` (studies, CSVs, figures). Outputs: `results_task6/`, `figures_task6/`. Run `python run_task6.py` (CoolProp recommended).
+
+- **Same basis as Cases A and B.** Compressor size `ftvi_eev.V_disp()`, Student 4 stage-efficiency map, Student 4 volumetric efficiency (overall pressure ratio, so mass flow does not change with P_i, as in A and B), Student 4 `check_limits`.
+- **Equal capacity.** Every Case C point has its speed solved so useful heat = 5.0 kW (limits 2500-8000 rpm, T_dis <= 130 C). A, B and C are compared at 5.0 kW using `compressor_vi.required_speed`.
+- **Intercooler options.** `reject`: Q_ic goes to ambient, Q_use = Q_gc. `recover`: Q_ic preheats the cabin air, which then passes the gas cooler, Q_use = Q_gc + Q_ic.
+- **Air side.** Heat-exchanger inlet air = fresh air (0.04 kg/s at T_amb) mixed with recirculated 20 C air (total 0.15 kg/s): 12.0 C at -10 C ambient. Minimum approach 5 K in the intercooler and gas cooler. Stage-2 suction must stay >= 2 K above Tsat(P_i).
+- **Sweep.** P_i = 3.5-6.0 MPa (0.1 MPa grid + local refinement), T_ic from its lower bound to just below the stage-1 discharge temperature (this includes the "almost no intercooling" end).
+- **Reading the results.** Optimum with `reject` sits at the no-intercooling end (Q_ic ~ 0), i.e. Case C collapses toward single-stage. Optimum with `recover` sits on the 5 K approach limit, so it depends on that assumption. Q_ic is recoverable only through a real air-side exchanger; no UA sizing is done.
+- Assumptions added by Student 6: 5 K approach, 2 K saturation margin, 1 K gap below T2, 5.0 kW target at -5 and -15 C too (as in Task 4).
 
 ---
 
@@ -250,7 +246,8 @@ Vapor-Injection-Heat-Pump-Optimization-for-Electric-Vehicle-Cold-Weather-Perform
 │                            #   recommended state table, architecture comparisons, load-matched benchmarks) + T5_optima_summary.json
 ├── /figures_task5/          # Task 5 publication figures (3D Pareto surface, 2D trade-offs, parametric effects,
 │                            #   P-h cycle overlay, architecture comparison bars, TOPSIS decision landscape, residuals)
-└── /RESULTS/student6/       # Task 6 Case C sweep data, optima tables, and figures
+├── /results_task6/          # Task 6 Case C sweep, optima, A/B/C comparison CSVs + hand-over JSON (Tarang Gupta)
+└── /figures_task6/          # Task 6 pressure sweep, intercooler-temperature sensitivity, A/B/C comparison plots
 `
 
 ## How to Run
@@ -261,7 +258,7 @@ python run_all.py       # Tasks 1 & 2  -> results/, figures/
 python run_task3.py     # Task 3       -> results_task3/, figures_task3/
 python run_task4.py     # Task 4       -> results_task4/, figures_task4/
 python run_task5.py     # Task 5       -> results_task5/, figures_task5/
-python run_task6.py     # Task 6       -> RESULTS/student6/
+python run_task6.py     # Task 6       -> results_task6/, figures_task6/
 `
 Set CO2_BACKEND=PR to force the built-in Peng–Robinson backend (small offsets in absolute numbers; see the backend note in Phase 1).
 
