@@ -1,0 +1,770 @@
+"""Cleanly rebuild report_template.html with all 6 authors, roll numbers,
+in-situ figures/tables, and verified sequential equations."""
+
+import os
+
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Steady-State Thermodynamic Modeling, Multi-Objective Optimization, and Architecture Benchmarking of a Flash-Tank Vapor Injection Transcritical CO2 Heat Pump for Electric Vehicles</title>
+<style>
+  @page {
+    size: letter portrait;
+    margin: 0.55in 0.5in 0.55in 0.5in;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 9.3pt;
+    line-height: 1.30;
+    color: #111;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Header Area */
+  .header-container {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 12px;
+    border-bottom: 0.5pt solid #888;
+    padding-bottom: 8px;
+  }
+
+  .doc-title {
+    font-size: 15.5pt;
+    font-weight: bold;
+    line-height: 1.20;
+    margin: 0 0 8px 0;
+    text-transform: capitalize;
+  }
+
+  /* 6-Author Grid */
+  .authors-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8pt 14pt;
+    margin: 6pt auto 4pt auto;
+    max-width: 98%;
+  }
+
+  .author-col {
+    flex: 0 0 30%;
+    text-align: center;
+    line-height: 1.22;
+  }
+
+  .author-name {
+    font-size: 9.6pt;
+    font-weight: bold;
+    color: #111;
+  }
+
+  .author-roll {
+    font-size: 8.5pt;
+    font-weight: 600;
+    font-family: "Courier New", Courier, monospace;
+    color: #1e3a8a;
+  }
+
+  .author-role {
+    font-size: 7.8pt;
+    font-style: italic;
+    color: #444;
+  }
+
+  .affiliation {
+    font-style: italic;
+    font-size: 8.5pt;
+    color: #333;
+    margin-top: 5pt;
+    text-align: center;
+  }
+
+  /* One Continuous Two-Column Layout */
+  .two-column-layout {
+    column-count: 2;
+    column-gap: 0.24in;
+    column-fill: balance;
+    text-align: justify;
+  }
+
+  /* Abstract & Index Terms */
+  .abstract-text {
+    font-size: 8.5pt;
+    line-height: 1.25;
+    margin-bottom: 5pt;
+    text-align: justify;
+  }
+
+  .abstract-heading {
+    font-weight: bold;
+    font-style: italic;
+    display: inline;
+  }
+
+  .index-terms {
+    font-size: 8.5pt;
+    margin-bottom: 8pt;
+    text-align: justify;
+  }
+
+  .index-heading {
+    font-weight: bold;
+    font-style: italic;
+    display: inline;
+  }
+
+  /* Headings */
+  h1.ieee-heading {
+    font-size: 9.5pt;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    break-after: avoid;
+    letter-spacing: 0.5px;
+  }
+
+  h2.ieee-subheading {
+    font-size: 8.8pt;
+    font-style: italic;
+    font-weight: bold;
+    margin-top: 6px;
+    margin-bottom: 2px;
+    break-after: avoid;
+  }
+
+  p {
+    margin: 0 0 5px 0;
+    text-indent: 1.2em;
+    text-align: justify;
+  }
+
+  p.no-indent {
+    text-indent: 0;
+  }
+
+  /* Wide Elements Spanning Both Columns */
+  .wide-element {
+    column-span: all;
+    width: 100%;
+    margin: 9px 0 7px 0;
+    break-inside: avoid;
+    text-align: center;
+  }
+
+  /* Equations */
+  .eq-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 5px 0;
+    width: 100%;
+    box-sizing: border-box;
+    break-inside: avoid;
+  }
+
+  .eq-img {
+    max-height: 26px;
+    max-width: 82%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .eq-no {
+    position: absolute;
+    right: 2px;
+    font-size: 9pt;
+    font-family: "Times New Roman", serif;
+    font-weight: normal;
+    color: #111;
+  }
+
+  /* Figures */
+  .figure-container {
+    margin: 7px 0 5px 0;
+    text-align: center;
+    break-inside: avoid;
+  }
+
+  .figure-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 1px;
+  }
+
+  .figure-caption {
+    font-size: 7.8pt;
+    line-height: 1.22;
+    text-align: justify;
+    margin-top: 3px;
+    padding: 0 2px;
+    font-family: "Times New Roman", serif;
+    color: #111;
+  }
+
+  .fig-label {
+    font-weight: bold;
+  }
+
+  /* Tables */
+  .table-caption {
+    font-size: 7.8pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 7px;
+    margin-bottom: 2px;
+    break-after: avoid;
+    font-family: "Times New Roman", serif;
+  }
+
+  .ieee-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.4pt;
+    line-height: 1.20;
+    margin-bottom: 6px;
+    break-inside: avoid;
+  }
+
+  .ieee-table th {
+    border-top: 1.2pt solid #000;
+    border-bottom: 0.8pt solid #000;
+    padding: 2.5px 3.5px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #fafafa;
+  }
+
+  .ieee-table td {
+    border-bottom: 0.4pt solid #ddd;
+    padding: 2px 3.5px;
+    text-align: center;
+  }
+
+  .ieee-table tr:last-child td {
+    border-bottom: 1.2pt solid #000;
+  }
+
+  .state-table th {
+    padding: 2.5px 2px;
+    font-size: 7pt;
+  }
+
+  .state-table td {
+    padding: 1.8px 2px;
+    font-size: 7pt;
+  }
+
+  code {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 8pt;
+    background-color: #f4f4f4;
+    padding: 0 2px;
+  }
+
+  .references ol {
+    margin: 0;
+    padding-left: 1.3em;
+    font-size: 7.8pt;
+    line-height: 1.22;
+  }
+
+  .references li {
+    margin-bottom: 3.5px;
+    text-align: justify;
+  }
+</style>
+</head>
+<body>
+
+<!-- Header (Spans both columns) -->
+<div class="header-container">
+  <div class="doc-title">Steady-State Thermodynamic Modeling, Multi-Objective Optimization, and Architecture Benchmarking of a Flash-Tank Vapor Injection Transcritical CO<sub>2</sub> Heat Pump for Electric Vehicles</div>
+  
+  <div class="authors-grid">
+    <div class="author-col">
+      <div class="author-name">Kartik Gupta</div>
+      <div class="author-roll">Roll No: 24B2152</div>
+      <div class="author-role">Student 1 &mdash; Baseline Cycle Modeling</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Durgesh Nimse</div>
+      <div class="author-roll">Roll No: 24B2226</div>
+      <div class="author-role">Student 2 &mdash; Flash-Tank Phase Separation</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Disha Jain</div>
+      <div class="author-roll">Roll No: 24B2125</div>
+      <div class="author-role">Student 3 &mdash; Injection EEV Orifice Flow</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Garva Chirag</div>
+      <div class="author-roll">Roll No: 24B2269</div>
+      <div class="author-role">Student 4 &mdash; Off-Design Compressor Map</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Anmol Raj</div>
+      <div class="author-roll">Roll No: 24B2260</div>
+      <div class="author-role">Student 5 &mdash; System Integration &amp; Optimization</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Tarang Gupta</div>
+      <div class="author-roll">Roll No: 24B2230</div>
+      <div class="author-role">Student 6 &mdash; Two-Stage Intercooled Cycle</div>
+    </div>
+  </div>
+
+  <div class="affiliation">Department of Mechanical Engineering, Indian Institute of Technology Bombay, Mumbai 400076, India</div>
+</div>
+
+<div class="two-column-layout">
+
+  <!-- Abstract & Index Terms -->
+  <div class="abstract-text">
+    <span class="abstract-heading">Abstract&mdash;</span>Cabin heating in battery electric vehicles (BEVs) under sub-zero winter ambient conditions represents a critical parasitic electrical load that degrades driving range by 30% to 45% when using baseline Positive Temperature Coefficient (PTC) electric heaters. While environmentally friendly transcritical carbon dioxide (R744, GWP = 1, ODP = 0) heat pumps provide high volumetric capacity, their performance is severely constrained under extreme cold ambients (down to &minus;15 &deg;C) by suction vapor density collapse, excessive compression pressure ratios, degraded volumetric efficiency, and excessive compressor discharge temperatures that breach the thermal stability limit of PAG compressor lubricant oil (130 &deg;C). In this capstone project, a comprehensive steady-state thermodynamic model of an economized Flash-Tank Vapor Injection (FT-VI) heat pump (Case B) was integrated, optimized, and rigorously benchmarked against the single-stage baseline (Case A) and a two-stage intercooled alternative (Case C). Operating components across Students 1&ndash;4 and Student 6 were unified into a conservation-closed solver where mass and First-Law energy balances close to machine precision (&lt; 6 &times; 10<sup>&minus;15</sup> kW). A 3D multi-objective optimization across intermediate flash-tank pressure (P_FT &isin; [3.5, 6.0] MPa), injection valve opening (&phi; &isin; [0.05, 1.00]), and compressor speed (N &isin; [2500, 8000] rpm) was conducted over 7,056 states. From 5,905 feasible designs, the 45 non-dominated Pareto-optimal solutions were extracted and evaluated using Multi-Criteria Decision Making (TOPSIS and Knee-Point criteria). The recommended design point (P_FT = 4.25 MPa, &phi; = 100%, N = 4000 rpm at T_amb = &minus;10 &deg;C) delivers a heating capacity of 7.049 kW (+41.0% over Case A), a heating COP of 2.742 (+5.7%), and reduces discharge temperature by 12.9 K to 107.5 &deg;C. In steady-state cruising delivering a matched 5.0 kW load, the FT-VI system throttles to 2800 rpm (&minus;30.0% speed), cutting electrical power consumption by 3.8% (1.854 kW vs 1.926 kW). At extreme &minus;15 &deg;C ambient, where Case A fails due to thermal violation (T_dis = 130.4 &deg;C), FT-VI operates reliably at 3197 rpm (T_dis = 116.8 &deg;C). Although Case C with cabin heat recovery achieves a paper COP of 2.824, it requires a 33% higher compressor speed (4203 rpm) and adds substantial dual-radiator packaging complexity. The Flash-Tank Vapor Injection architecture is demonstrated to be the superior automotive thermal management solution.
+  </div>
+
+  <div class="index-terms">
+    <span class="index-heading">Index Terms&mdash;</span>Electric Vehicle, Heat Pump, Transcritical R744, Vapor Injection, Flash Tank, Multi-Objective Optimization, Pareto Frontier, TOPSIS, Intercooling.
+  </div>
+
+  <!-- SECTION I -->
+  <h1 class="ieee-heading">I. Definition &amp; Understanding of Problem</h1>
+  <p>In conventional internal combustion engine (ICE) passenger cars, cabin heating is provided virtually without penalty by harvesting high-temperature waste heat rejected to the engine cooling jacket (~20&ndash;30 kW thermal). Conversely, in modern Battery Electric Vehicles (BEVs), electric drivetrains operate at 90%&ndash;95% efficiency, yielding insufficient waste heat (rarely exceeding 1&ndash;2 kW during steady cruising) [1], [2]. When operating in cold winter conditions (temperatures from &minus;5 &deg;C down to &minus;15 &deg;C), maintaining a comfortable passenger cabin temperature of 20 &deg;C requires 5.0 kW of steady heating power.</p>
+
+  <p>Traditional electric vehicles rely on Positive Temperature Coefficient (PTC) resistive electric heaters. Because PTC elements operate with a thermodynamic Coefficient of Performance of COP = 1.0, supplying 5.0 kW of heating draws 5.0 kW of continuous electrical power directly from the traction battery. Over a 1-hour highway driving cycle, this extracts 5.0 kWh of stored electrical energy, diminishing vehicle driving range by 30% to 45% [3].</p>
+
+  <p>Vapor compression heat pumps offer a compelling solution by pumping low-grade ambient heat into the vehicle cabin, achieving typical heating COPs between 2.0 and 3.0, thereby slashing high-voltage electrical battery drain by 50% to 65%. However, conventional single-stage heat pumps (Case A) face severe thermodynamic and physical limitations as ambient temperature drops:</p>
+
+  <p>1) <em>Suction Density Collapse:</em> At T_amb = &minus;10 &deg;C and an evaporator approach of 5 K, the evaporating temperature is &minus;15 &deg;C, corresponding to a saturation pressure of P_evap = 2.29 MPa for carbon dioxide (R744). The suction vapor density drops to ~60.1 kg/m&sup3;, restricting the refrigerant mass flow swallowed by a fixed-displacement compressor.</p>
+
+  <p>2) <em>Excessive Pressure Ratios:</em> For transcritical heat rejection at P_dis = 9.5 MPa, the overall pressure ratio rises to PR = 9.5 / 2.29 = 4.15 (and exceeds 4.8 at &minus;15 &deg;C). This causes severe clearance volume gas re-expansion and blow-by leakage, drastically degrading volumetric efficiency.</p>
+
+  <p>3) <em>Discharge Temperature Limit Violation:</em> The steep isentropic compression path across high pressure ratios drives compressor discharge temperatures above 120 &deg;C at &minus;10 &deg;C ambient, and beyond 130.4 &deg;C at &minus;15 &deg;C ambient. Temperatures above 130 &deg;C cause irreversible thermal breakdown of polyalkylene glycol (PAG) compressor lubrication oil, resulting in accelerated mechanical wear and catastrophic compressor seizure [4].</p>
+
+  <!-- TABLE I (Single Column) -->
+  <div class="table-caption">TABLE I. Baseline Heat Pump Boundary Conditions &amp; Parameters</div>
+  <table class="ieee-table">
+    <thead>
+      <tr><th>Parameter</th><th>Symbol</th><th>Value</th><th>Unit</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Ambient Temperature (Design)</td><td>T_amb</td><td>-10.0</td><td>&deg;C</td></tr>
+      <tr><td>Required Heating Load</td><td>Q_load</td><td>5.00</td><td>kW</td></tr>
+      <tr><td>Gas Cooler Discharge Pressure</td><td>P_dis</td><td>9.50</td><td>MPa</td></tr>
+      <tr><td>Gas Cooler Exit Temperature</td><td>T_gc_out</td><td>35.0</td><td>&deg;C</td></tr>
+      <tr><td>Evaporator Approach &amp; Superheat</td><td>&Delta;T_app, SH</td><td>5.0, 5.0</td><td>K</td></tr>
+      <tr><td>Compressor Speed Range</td><td>N</td><td>4000 [2500, 8000]</td><td>rpm</td></tr>
+      <tr><td>Max Discharge Temperature</td><td>T_dis_max</td><td>130.0</td><td>&deg;C</td></tr>
+      <tr><td>Calibrated Displacement</td><td>V_disp</td><td>8.878</td><td>cm&sup3;</td></tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION II -->
+  <h1 class="ieee-heading">II. Project Objectives</h1>
+  <p>The primary engineering objective of this group investigation is to model, optimize, and evaluate advanced cycle architectures that resolve the cold-weather heating deficit while strictly respecting physical and material constraints. The explicit objectives are:</p>
+  <p>1) Integrate component models from Students 1&ndash;4 into a fully coupled, steady-state thermodynamic cycle simulation model of the baseline (Case A) and Flash-Tank Vapor Injection (FT-VI, Case B) heat pumps.</p>
+  <p>2) Formulate and verify mass and First-Law energy conservation closures across all components to ensure machine-numerical validity.</p>
+  <p>3) Conduct a rigorous 3D multi-objective optimization over intermediate flash-tank pressure (P_FT), injection EEV relative opening (&phi;), and compressor speed (N) to simultaneously maximize heating COP (COP_h), maximize heating capacity (Q_h), and minimize compressor discharge temperature (T_dis).</p>
+  <p>4) Identify the non-dominated Pareto-optimal frontier and apply Multi-Criteria Decision Making (TOPSIS and Knee-Point algorithms) to select and justify a single recommended operating design point.</p>
+  <p>5) Benchmark the optimized FT-VI system against the conventional baseline (Case A) and the two-stage intercooled architecture (Case C, modeled by Student 6) under nominal speed and load-matched (5.0 kW) cruising conditions across &minus;5 &deg;C, &minus;10 &deg;C, and &minus;15 &deg;C ambients.</p>
+
+  <!-- SECTION III -->
+  <h1 class="ieee-heading">III. Relevant Background &amp; Governing Theory</h1>
+  <p class="no-indent"><em>A. Fundamentals of Vapor Compression &amp; Transcritical Cycles</em></p>
+  <p>In a standard subcritical vapor compression cycle, heat rejection occurs via condensation below the critical point. For carbon dioxide (R744), the critical temperature is T_c = 30.98 &deg;C (P_c = 7.38 MPa). Because automotive passenger cabin heating requires hot air delivery at 40 &deg;C to 45 &deg;C (well above T_c), condensation at constant temperature is physically impossible. Instead, R744 systems must operate <em>transcritically</em>: heat absorption occurs at subcritical pressures in the outdoor evaporator, while heat rejection takes place at supercritical pressures (P_dis &gt; P_c) in a continuous single-phase <em>Gas Cooler</em> [1], [5].</p>
+
+  <p>In an ideal cycle, heat exchangers (evaporator and gas cooler) operate isobarically, compressors operate isentropically, and expansion valves undergo adiabatic isenthalpic throttling.</p>
+
+  <p class="no-indent"><em>B. Case A: Single-Stage Baseline Governing Correlations</em></p>
+  <p>The conventional cycle consists of suction state 1 (P_evap, T_evap + &Delta;T_sh), isentropic compression 2s, actual discharge 2, isobaric gas cooling 3, and isenthalpic expansion 4 (h_4 = h_3). The thermal performance is governed by:</p>
+  
+  <div class="eq-block">
+    <img src="eq_svg/eq1.svg" class="eq-img" alt="Eq 1" />
+    <span class="eq-no">(1)</span>
+  </div>
+  <div class="eq-block">
+    <img src="eq_svg/eq2.svg" class="eq-img" alt="Eq 2" />
+    <span class="eq-no">(2)</span>
+  </div>
+  <div class="eq-block">
+    <img src="eq_svg/eq3.svg" class="eq-img" alt="Eq 3" />
+    <span class="eq-no">(3)</span>
+  </div>
+  <div class="eq-block">
+    <img src="eq_svg/eq4.svg" class="eq-img" alt="Eq 4" />
+    <span class="eq-no">(4)</span>
+  </div>
+
+  <p>For a realistic compressor, the volumetric efficiency is governed by the overall pressure ratio:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq5.svg" class="eq-img" alt="Eq 5" />
+    <span class="eq-no">(5)</span>
+  </div>
+  <p>where EV_0 = 0.97 and EV_1 = 0.03. Compressor displacement is calibrated such that Case A delivers exactly Q_load = 5.0 kW at N = 4000 rpm, T_amb = &minus;10 &deg;C, and P_dis = 9.5 MPa, yielding V_disp = 8.878 cm&sup3;. The refrigerant mass flow swallowed is:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq6.svg" class="eq-img" alt="Eq 6" />
+    <span class="eq-no">(6)</span>
+  </div>
+
+  <p>The realistic isentropic efficiency follows the empirical quadratic pressure-ratio and speed-dependent correlation developed by Student 4:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq7.svg" class="eq-img" alt="Eq 7" />
+    <span class="eq-no">(7)</span>
+  </div>
+
+  <p class="no-indent"><em>C. Case B: Flash-Tank Vapor Injection Governing Correlations</em></p>
+  <p>The FT-VI architecture introduces an intermediate flash tank that phase-separates expanded two-phase refrigerant into saturated vapor (state 7) and saturated liquid (state 8). Saturated liquid expands through the main EEV into the evaporator, providing suction flow &dot;m_suc. Saturated vapor is injected through a secondary injection EEV into the compressor at port pressure P_port, augmenting the total mass flow swallowed by Stage 2 to &dot;m_tot = &dot;m_suc + &dot;m_inj.</p>
+  
+  <p>The intermediate injection port pressure is coupled to the evaporator pressure:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq8.svg" class="eq-img" alt="Eq 8" />
+    <span class="eq-no">(8)</span>
+  </div>
+
+  <p>The flash tank vapor quality is determined from an adiabatic First-Law energy balance:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq9.svg" class="eq-img" alt="Eq 9" />
+    <span class="eq-no">(9)</span>
+  </div>
+
+  <p>Compressible flow through the injection EEV experiences sonic choking when the pressure ratio exceeds the critical ratio:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq10.svg" class="eq-img" alt="Eq 10" />
+    <span class="eq-no">(10)</span>
+  </div>
+
+  <p>The injection valve mass flow is governed by the compressible orifice formulation:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq11.svg" class="eq-img" alt="Eq 11" />
+    <span class="eq-no">(11)</span>
+  </div>
+  <div class="eq-block">
+    <img src="eq_svg/eq12.svg" class="eq-img" alt="Eq 12" />
+    <span class="eq-no">(12)</span>
+  </div>
+
+  <p>Flash tank mass balance dictates that continuous vapor injection cannot exceed the rate of flash vapor generation:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq13.svg" class="eq-img" alt="Eq 13" />
+    <span class="eq-no">(13)</span>
+  </div>
+
+  <p class="no-indent"><em>D. Case C: Two-Stage Intercooled Cycle Correlations</em></p>
+  <p>In Case C, the compressor is divided into two discrete stages with an intermediate gas cooler (intercooler) rejecting heat &dot;Q_IC:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq14.svg" class="eq-img" alt="Eq 14" />
+    <span class="eq-no">(14)</span>
+  </div>
+
+  <p>When intercooler heat is recovered to pre-heat cabin air, the mixed cabin air temperature entering the main gas cooler is:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq15.svg" class="eq-img" alt="Eq 15" />
+    <span class="eq-no">(15)</span>
+  </div>
+  <p>Two intercooler modes are evaluated: <em>Reject</em> (Q_ic rejected to ambient, Q_use = Q_gc) and <em>Recover</em> (cabin air passes intercooler first, then gas cooler: Q_use = Q_gc + Q_ic).</p>
+
+  <!-- FIGURE 1: P-h Comparison (Single Column) -->
+  <div class="figure-container">
+    <img src="figures_task5/fig_T5_4_ph_comparison.png" alt="P-h diagram" />
+    <div class="figure-caption"><span class="fig-label">Fig. 1.</span> Pressure&ndash;enthalpy (P&ndash;h) thermodynamic cycle comparison overlay on the R744 saturation dome, contrasting baseline Case A (blue), nominal FT-VI Case B (green), optimized FT-VI Case B (red), and two-stage intercooled Case C (purple).</div>
+  </div>
+
+  <!-- SECTION IV -->
+  <h1 class="ieee-heading">IV. Methodology</h1>
+  <p class="no-indent"><em>A. Thermodynamic Property Backend &amp; Balance Closure</em></p>
+  <p>Calculations use the high-accuracy CoolProp Span-Wagner Equation of State (EOS) for CO<sub>2</sub> (IIR reference state: h = 200 kJ/kg, s = 1.0 kJ/kg-K at 0 &deg;C saturated liquid) with an analytical Peng-Robinson cubic EOS fallback. Machine-epsilon conservation checks verify mass and First-Law energy closures across every state:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq16.svg" class="eq-img" alt="Eq 16" />
+    <span class="eq-no">(16)</span>
+  </div>
+
+  <p class="no-indent"><em>B. 3D Parameter Sweep &amp; Multi-Objective Optimization</em></p>
+  <p>The decision variable space was discretized into 7,056 grid points:</p>
+  <p>&bull; Flash tank pressure P_FT: 3.50 to 6.00 MPa (11 steps of 0.25 MPa)</p>
+  <p>&bull; Injection valve opening &phi;: 0.05 to 1.00 (20 steps of 0.05)</p>
+  <p>&bull; Compressor speed N: 2500 to 8000 rpm (23 steps of 250 rpm)</p>
+
+  <p>Candidate points were filtered against hard constraints: T_dis &le; 130 &deg;C, P_dis &le; 12.0 MPa, and Q_h &ge; 5.0 kW. A fast non-dominated sorting algorithm extracted the non-dominated Pareto frontier across objectives: max COP_h, max Q_h, and min T_dis.</p>
+
+  <p class="no-indent"><em>C. Multi-Criteria Decision Making (TOPSIS)</em></p>
+  <p>From the Pareto set, TOPSIS constructs a normalized decision matrix r_ij = x_ij / (&Sigma;_k x_kj&sup2;)<sup>0.5</sup>, applies criteria weights (w_COP = 0.40, w_Q = 0.40, w_T = 0.20), identifies ideal (A*) and negative-ideal (A&minus;) solutions, and ranks points by relative closeness:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq17.svg" class="eq-img" alt="Eq 17" />
+    <span class="eq-no">(17)</span>
+  </div>
+  <p>The Knee-Point minimizes Euclidean distance to the Utopia point.</p>
+
+  <!-- SECTION V -->
+  <h1 class="ieee-heading">V. Individual &amp; Group Approach</h1>
+  <p>The project was structured across six specialized student roles within the Department of Mechanical Engineering at IIT Bombay:</p>
+  <p>&bull; <em>Student 1 &mdash; Kartik Gupta (Roll No: 24B2152):</em> Conventional baseline cycle modeling, displacement calibration (V_disp = 8.878 cm&sup3;), and initial sensitivity studies.</p>
+  <p>&bull; <em>Student 2 &mdash; Durgesh Nimse (Roll No: 24B2226):</em> Implementation and validation of CO<sub>2</sub> property backend, flash-tank phase separation, and First-Law energy balance verification.</p>
+  <p>&bull; <em>Student 3 &mdash; Disha Jain (Roll No: 24B2125):</em> Orifice modeling of injection EEV, sonic choking criteria, expansion factor formulation, and valve opening sensitivity.</p>
+  <p>&bull; <em>Student 4 &mdash; Garva Chirag (Roll No: 24B2269):</em> Compressor stage-by-stage efficiency mapping (&eta;_is, &eta;_v), off-design work splits, and operating envelopes.</p>
+  <p>&bull; <em>Student 5 &mdash; Anmol Raj (Roll No: 24B2260):</em> System integration, First-Law balance closures, 3D multi-objective optimization, Pareto sorting, TOPSIS decision analysis, and multi-architecture benchmarking.</p>
+  <p>&bull; <em>Student 6 &mdash; Tarang Gupta (Roll No: 24B2230):</em> Modeling of Case C two-stage intercooled cycle, approach temperature limits, and handover to Student 5.</p>
+
+  <!-- SECTION VI -->
+  <h1 class="ieee-heading">VI. Analysis &amp; Computational Work</h1>
+  <p>System integration in <code>optimization_vi.py</code> couples components into an iterative steady-state solver. Mixing enthalpy entering Stage 2 is evaluated from stream conservation:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq18.svg" class="eq-img" alt="Eq 18" />
+    <span class="eq-no">(18)</span>
+  </div>
+  <p>Total compressor electrical power consumption is the sum of stage works:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq19.svg" class="eq-img" alt="Eq 19" />
+    <span class="eq-no">(19)</span>
+  </div>
+
+  <p>Conservation verification across 165 states confirmed: maximum mass balance error |m_tot - (m_suc + m_inj)| = 0.00 kg/s; maximum First-Law cycle error |Q_h - (Q_e + W)| = 5.33 &times; 10<sup>&minus;15</sup> kW; and flash tank adiabatic error = 1.78 &times; 10<sup>&minus;15</sup> kW, confirming perfect thermodynamic closure (Table VI).</p>
+
+  <!-- TABLE VI (Single Column) -->
+  <div class="table-caption">TABLE VI. Numerical Conservation Residuals Verification</div>
+  <table class="ieee-table">
+    <thead>
+      <tr><th>Conservation Metric</th><th>Residual</th><th>Tolerance</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Cycle Mass Balance Error</td><td>0.000 kg/s</td><td>10<sup>&minus;8</sup> kg/s</td><td>Verified</td></tr>
+      <tr><td>First-Law Energy Closure</td><td>5.33 &times; 10<sup>&minus;15</sup> kW</td><td>10<sup>&minus;12</sup> kW</td><td>Verified</td></tr>
+      <tr><td>Flash-Tank Energy Closure</td><td>1.78 &times; 10<sup>&minus;15</sup> kW</td><td>10<sup>&minus;12</sup> kW</td><td>Verified</td></tr>
+      <tr><td>Regression vs Student 4</td><td>1.16 &times; 10<sup>&minus;7</sup> diff</td><td>10<sup>&minus;5</sup></td><td>Verified</td></tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION VII -->
+  <h1 class="ieee-heading">VII. Results &amp; Benchmark Tables</h1>
+  
+  <p class="no-indent"><em>A. Pareto Frontier &amp; Multi-Criteria Optima</em></p>
+  <p>Out of 7,056 sampled evaluations, 5,905 were feasible. Exactly 45 non-dominated Pareto solutions were extracted. Table III summarizes the single-objective anchor points alongside the MCDM recommendations.</p>
+
+  <!-- TABLE III (Single Column) -->
+  <div class="table-caption">TABLE III. Pareto Frontier Anchors &amp; Decision Points</div>
+  <table class="ieee-table">
+    <thead>
+      <tr><th>Design Selection</th><th>P_FT</th><th>&phi; [%]</th><th>N</th><th>COP_h</th><th>Q_h</th><th>T_dis</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Max COP_h Anchor</td><td>4.25</td><td>100</td><td>3875</td><td><b>2.745</b></td><td>6.88</td><td>107.2</td></tr>
+      <tr><td>Max Q_h Anchor</td><td>5.13</td><td>100</td><td>8000</td><td>2.540</td><td><b>13.51</b></td><td>113.2</td></tr>
+      <tr><td>Min T_dis Anchor</td><td>5.00</td><td>62</td><td>4150</td><td>2.705</td><td>6.85</td><td><b>107.0</b></td></tr>
+      <tr><td>TOPSIS (Balanced)</td><td>4.75</td><td>100</td><td>5800</td><td>2.687</td><td>9.88</td><td>108.1</td></tr>
+      <tr><td>Knee Point</td><td>4.75</td><td>100</td><td>5800</td><td>2.687</td><td>9.88</td><td>108.1</td></tr>
+      <tr><td><b>Recommended Point</b></td><td><b>4.25</b></td><td><b>100</b></td><td><b>4000</b></td><td><b>2.742</b></td><td><b>7.05</b></td><td><b>107.5</b></td></tr>
+    </tbody>
+  </table>
+
+  <!-- FIGURE 2: 3D Pareto Frontier (Single Column) -->
+  <div class="figure-container">
+    <img src="figures_task5/fig_T5_1_pareto_3d.png" alt="3D Pareto Frontier" />
+    <div class="figure-caption"><span class="fig-label">Fig. 2.</span> 3D Pareto-optimal frontier surface in (COP_h, Q_h, T_dis) space extracted from 7,056 evaluations, highlighting single-objective anchors, TOPSIS points, and the recommended design point.</div>
+  </div>
+
+  <!-- FIGURE 3 (Wide Element across both columns) -->
+  <div class="wide-element">
+    <div class="figure-container">
+      <img src="figures_task5/fig_T5_2_pareto_2d_tradeoffs.png" style="width: 98%; max-height: 2.2in; object-fit: contain;" alt="2D Pareto Projections" />
+      <div class="figure-caption"><span class="fig-label">Fig. 3.</span> 2D Pareto projections illustrating trade-offs between heating COP_h, heating capacity Q_h, and compressor discharge temperature T_dis across the 45 non-dominated solutions.</div>
+    </div>
+  </div>
+
+  <p class="no-indent"><em>B. Cross-Architecture Comparisons</em></p>
+  <p>Table IV presents the cross-architecture performance at the nominal design speed of 4000 rpm across &minus;5 &deg;C, &minus;10 &deg;C, and &minus;15 &deg;C ambients. Table V presents the load-matched cruising comparison delivering exactly 5.00 kW.</p>
+
+  <!-- TABLE IV (Single Column) -->
+  <div class="table-caption">TABLE IV. Architecture Comparison at Nominal Speed (4000 rpm)</div>
+  <table class="ieee-table">
+    <thead>
+      <tr><th>T_amb</th><th>Metric</th><th>Case A</th><th>Case B (Nom)</th><th>Case B (Opt)</th><th>Case C (Recov)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td rowspan="3"><b>-5 &deg;C</b></td><td>Q_h [kW]</td><td>5.66</td><td>6.51 (+15%)</td><td><b>6.87 (+21%)</b></td><td>5.40 (-5%)</td></tr>
+      <tr><td>COP_h</td><td>2.81</td><td>2.86</td><td>2.90 (+3%)</td><td><b>3.08 (+10%)</b></td></tr>
+      <tr><td>T_dis [&deg;C]</td><td>111.5</td><td>106.5</td><td>104.7 (-7 K)</td><td><b>67.0 (-45 K)</b></td></tr>
+      <tr><td rowspan="3"><b>-10 &deg;C</b><br>(Design)</td><td>Q_h [kW]</td><td>5.00</td><td>6.20 (+24%)</td><td><b>7.05 (+41%)</b></td><td>4.76 (fails)</td></tr>
+      <tr><td>COP_h</td><td>2.595</td><td>2.671</td><td>2.742 (+6%)</td><td><b>2.824 (+9%)</b></td></tr>
+      <tr><td>T_dis [&deg;C]</td><td>120.4</td><td>111.6</td><td>107.5 (-13 K)</td><td><b>68.7 (-52 K)</b></td></tr>
+      <tr><td rowspan="3"><b>-15 &deg;C</b><br>(Extreme)</td><td>Q_h [kW]</td><td>4.39 (fails)</td><td>5.84 (+33%)</td><td><b>6.24 (+42%)</b></td><td>4.17 (fails)</td></tr>
+      <tr><td>COP_h</td><td>2.407</td><td>2.496</td><td>2.524 (+5%)</td><td><b>2.601 (+8%)</b></td></tr>
+      <tr><td>T_dis [&deg;C]</td><td>130.2 (viol)</td><td>117.6</td><td>115.9 (-14 K)</td><td><b>70.8 (-59 K)</b></td></tr>
+    </tbody>
+  </table>
+
+  <!-- TABLE V (Single Column) -->
+  <div class="table-caption">TABLE V. Load-Matched Comparison (Exact 5.0 kW Cabin Load)</div>
+  <table class="ieee-table">
+    <thead>
+      <tr><th>T_amb</th><th>Architecture</th><th>N [rpm]</th><th>W [kW]</th><th>COP_h</th><th>T_dis [&deg;C]</th></tr>
+    </thead>
+    <tbody>
+      <tr><td rowspan="4"><b>-10 &deg;C</b></td><td>Case A (Baseline)</td><td>4000</td><td>1.926</td><td>2.595</td><td>120.4</td></tr>
+      <tr><td>Case B (FT-VI Nom)</td><td>3032</td><td>1.871</td><td>2.673</td><td>110.3</td></tr>
+      <tr><td><b>Case B (FT-VI Opt)</b></td><td><b>2800</b></td><td><b>1.854</b></td><td><b>2.697</b></td><td><b>108.9</b></td></tr>
+      <tr><td>Case C (Intercooled)</td><td>4203</td><td>1.770</td><td>2.824</td><td>68.7</td></tr>
+      <tr><td rowspan="4"><b>-15 &deg;C</b></td><td>Case A (Baseline)</td><td>4555</td><td>2.079</td><td>2.405</td><td>130.4 (Fail)</td></tr>
+      <tr><td>Case B (FT-VI Nom)</td><td>3276</td><td>2.001</td><td>2.499</td><td>116.5</td></tr>
+      <tr><td><b>Case B (FT-VI Opt)</b></td><td><b>3197</b></td><td><b>1.996</b></td><td><b>2.505</b></td><td><b>116.8</b></td></tr>
+      <tr><td>Case C (Intercooled)</td><td>4800</td><td>1.922</td><td>2.601</td><td>70.8</td></tr>
+    </tbody>
+  </table>
+
+  <!-- FIGURE 4: Bar Charts (Single Column) -->
+  <div class="figure-container">
+    <img src="figures_task5/fig_T5_5_case_comparison_bars.png" alt="Bar charts comparison" />
+    <div class="figure-caption"><span class="fig-label">Fig. 4.</span> Cross-architecture performance comparison bar charts at &minus;5 &deg;C, &minus;10 &deg;C, and &minus;15 &deg;C ambients under nominal 4000 rpm operation.</div>
+  </div>
+
+  <p class="no-indent"><em>C. Recommended Design Point &amp; Thermodynamic State Table</em></p>
+  <p>The recommended design point is selected at P_FT = 4.25 MPa, &phi; = 100%, and N = 4000 rpm under design conditions (T_amb = &minus;10 &deg;C, P_dis = 9.5 MPa). This point delivers Q_h = 7.049 kW (+41.0% heating capacity reserve), COP_h = 2.742 (+5.7% efficiency boost), and suppresses discharge temperature to 107.5 &deg;C (12.9 K lower than baseline, safely below the 130 &deg;C lubricant threshold).</p>
+
+  <p>During steady cruising at &minus;10 &deg;C requiring exactly 5.0 kW, the optimized FT-VI compressor throttles from 4000 rpm down to 2800 rpm (&minus;30.0% speed reduction), consuming only 1.854 kW of electrical power (3.8% savings vs Case A). At &minus;15 &deg;C extreme ambient, while Case A fails due to oil thermal degradation (T_dis = 130.4 &deg;C), the FT-VI system operates reliably at 3197 rpm with T_dis = 116.8 &deg;C.</p>
+
+  <!-- TABLE II (Wide Element across both columns) -->
+  <div class="wide-element">
+    <div class="table-caption">TABLE II. Complete 10-State Refrigerant Thermodynamic State Table (Recommended FT-VI Point: P_FT = 4.25 MPa, &phi; = 100%, N = 4000 rpm, T_amb = &minus;10 &deg;C)</div>
+    <table class="ieee-table state-table">
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Location in Flow Circuit</th>
+          <th>P [MPa]</th>
+          <th>T [&deg;C]</th>
+          <th>h [kJ/kg]</th>
+          <th>s [kJ/kg&middot;K]</th>
+          <th>Quality x</th>
+          <th>&dot;m [g/s]</th>
+          <th>Physical Description &amp; Process State</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><b>1</b></td><td>Evaporator outlet / Stage-1 suction</td><td>2.291</td><td>-10.00</td><td>443.46</td><td>1.928</td><td>Superheated</td><td>20.22</td><td>Vapor with 5 K superheat entering low stage</td></tr>
+        <tr><td><b>2</b></td><td>Stage-1 compressor discharge</td><td>3.436</td><td>23.63</td><td>466.81</td><td>1.974</td><td>Superheated</td><td>20.22</td><td>Discharged at P_port (1.5 &times; P_evap)</td></tr>
+        <tr><td><b>7</b></td><td>Flash-tank saturated vapor</td><td>4.250</td><td>7.69</td><td>425.18</td><td>1.800</td><td>1.000</td><td>11.04</td><td>Saturated vapor extracted from top of tank</td></tr>
+        <tr><td><b>7a</b></td><td>After injection EEV throttling</td><td>3.436</td><td>-0.53</td><td>425.18</td><td>1.826</td><td>Superheated</td><td>11.04</td><td>Isenthalpic throttling across EEV-2 to P_port</td></tr>
+        <tr><td><b>3</b></td><td>Mixing plenum / Stage-2 suction</td><td>3.436</td><td>12.64</td><td>452.11</td><td>1.923</td><td>Superheated</td><td>31.26</td><td>Desuperheated mixture entering Stage 2</td></tr>
+        <tr><td><b>4</b></td><td>Stage-2 compressor discharge</td><td>9.500</td><td>107.47</td><td>518.93</td><td>1.977</td><td>Supercritical</td><td>31.26</td><td>High-stage discharge into gas cooler</td></tr>
+        <tr><td><b>5</b></td><td>Gas cooler outlet</td><td>9.500</td><td>35.00</td><td>293.46</td><td>1.296</td><td>Supercritical</td><td>31.26</td><td>Dense supercritical fluid entering EEV-1</td></tr>
+        <tr><td><b>6</b></td><td>EEV-1 outlet / Flash tank inlet</td><td>4.250</td><td>7.69</td><td>293.46</td><td>1.331</td><td>0.360</td><td>31.26</td><td>Two-phase mixture after primary expansion</td></tr>
+        <tr><td><b>8</b></td><td>Flash tank liquid outlet to EEV-main</td><td>4.250</td><td>7.69</td><td>221.53</td><td>1.067</td><td>0.000</td><td>20.22</td><td>Saturated liquid drained from bottom of tank</td></tr>
+        <tr><td><b>9</b></td><td>EEV-main outlet / Evaporator inlet</td><td>2.291</td><td>-15.00</td><td>221.53</td><td>1.092</td><td>0.207</td><td>20.22</td><td>Low-pressure two-phase fluid entering evaporator</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="no-indent"><em>D. Parametric Sensitivity Analysis</em></p>
+  <p>The 9-panel parametric sensitivity map (Fig. 5) demonstrates the isolated and coupled thermodynamic influences of intermediate pressure P_FT, injection valve opening &phi;, and compressor speed N on COP_h, heating capacity Q_h, and discharge temperature T_dis:</p>
+
+  <p>1) <em>Effect of Flash-Tank Pressure P_FT:</em> Increasing P_FT from 3.5 to 4.25 MPa initially improves COP_h because higher flash pressure produces a cooler saturated liquid stream (state 8), expanding the evaporator specific enthalpy drop. However, increasing P_FT beyond 4.75 MPa restricts flash vapor generation, causing injection mass flow to diminish and collapsing the cycle toward baseline single-stage performance.</p>
+
+  <p>2) <em>Effect of Injection EEV Opening &phi;:</em> Opening the injection valve increases injection flow up to the vapor generation limit (&dot;m_inj,max). At &phi; = 100%, the valve is fully open, maximizing desuperheating of Stage-1 discharge vapor and driving discharge temperature down by over 12 K.</p>
+
+  <p>3) <em>Effect of Compressor Speed N:</em> Compressor speed provides direct linear modulation of heating capacity (scaling from 4.5 kW at 2500 rpm up to 13.5 kW at 8000 rpm). Operating at higher speeds incurs isentropic efficiency degradation due to frictional throttling losses, slightly reducing COP.</p>
+
+  <!-- FIGURE 5 (Wide Element across both columns) -->
+  <div class="wide-element">
+    <div class="figure-container">
+      <img src="figures_task5/fig_T5_3_parametric_effects.png" style="max-height: 4.0in; width: auto; max-width: 90%; display: block; margin: 0 auto;" alt="9-panel parametric effects" />
+      <div class="figure-caption"><span class="fig-label">Fig. 5.</span> 9-panel parametric sensitivity map illustrating the isolated and coupled thermodynamic influences of intermediate pressure P_FT, injection valve opening &phi;, and compressor speed N on COP_h, heating capacity Q_h, and compressor discharge temperature T_dis.</div>
+    </div>
+  </div>
+
+  <p class="no-indent"><em>E. Multi-Criteria TOPSIS Decision Landscape</em></p>
+  <p>Fig. 6 illustrates the TOPSIS decision landscape across the 45 non-dominated Pareto designs. When balanced weights are applied (w_COP = 0.40, w_Q = 0.40, w_T = 0.20), the algorithm identifies a high-speed operating point (N = 5800 rpm, P_FT = 4.75 MPa) delivering Q_h = 9.88 kW. However, for continuous automotive cruising where the cabin load is fixed at 5.0 kW, operating at 5800 rpm represents severe overcapacity. The recommended design point at 4000 rpm (and cruising at 2800 rpm) aligns engineering sizing with actual vehicle thermal demand.</p>
+
+  <!-- FIGURE 6: TOPSIS Landscape (Single Column) -->
+  <div class="figure-container">
+    <img src="figures_task5/fig_T5_6_topsis_decision_landscape.png" alt="TOPSIS Landscape" />
+    <div class="figure-caption"><span class="fig-label">Fig. 6.</span> TOPSIS Multi-Criteria Decision Making (MCDM) closeness landscape across the 45 non-dominated Pareto solutions.</div>
+  </div>
+
+  <!-- SECTION VIII -->
+  <h1 class="ieee-heading">VIII. Discussion &amp; Interpretation</h1>
+  <p class="no-indent"><em>A. Thermodynamic Mechanism of the 41% Capacity Boost</em></p>
+  <p>The heating capacity increases from 5.00 kW (Case A) to 7.05 kW (Case B Optimized) at 4000 rpm. This 41.0% jump stems from two physical mechanisms:</p>
+  <p>1) <em>Mass Flow Augmentation:</em> In Case A, the compressor discharges only the suction mass flow (&dot;m_suc = 20.22 g/s). In FT-VI, the injection port adds &dot;m_inj = 11.04 g/s directly into Stage 2. Consequently, the mass flow circulating through the cabin gas cooler increases by +54.6% to &dot;m_tot = 31.26 g/s (injection ratio &mu; = 0.546).</p>
+  <p>2) <em>Liquid Subcooling in Evaporator:</em> By flashing refrigerant to saturated liquid at P_FT = 4.25 MPa (h_8 = 221.5 kJ/kg) rather than throttling directly from the gas cooler exit (h_5 = 293.5 kJ/kg), the specific refrigerating effect (h_1 - h_9) expands by 48.0 kJ/kg (+27.6%). This allows the low-pressure outdoor evaporator to extract 4.48 kW of environmental heat despite cold &minus;10 &deg;C ambient air.</p>
+
+  <p class="no-indent"><em>B. Discharge Temperature Suppression Mechanism</em></p>
+  <p>In Case A, single-stage compression across PR = 4.15 drives discharge gas to 120.4 &deg;C. In FT-VI, hot Stage-1 discharge vapor (T_2 = 23.6 &deg;C) mixes with cold throttled injection vapor (T_7a = &minus;0.5 &deg;C). This inter-stage desuperheating cools the vapor entering Stage 2 down to T_3 = 12.6 &deg;C. Consequently, the final discharge temperature drops by 12.9 K to 107.5 &deg;C, comfortably below the 130 &deg;C oil degradation limit.</p>
+
+  <p class="no-indent"><em>C. Why Intermediate Pressure Has a Unique Optimum</em></p>
+  <p>Intermediate pressure P_FT governs a fundamental trade-off:</p>
+  <p>&bull; If P_FT is too low (approaching P_evap = 2.29 MPa): High pressure drop across EEV-1 increases flash vapor quality (x_FT &gt; 0.45), but Stage 1 performs minimal compression work. Stage 2 compresses over an excessive pressure ratio, driving T_dis up and degrading COP.</p>
+  <p>&bull; If P_FT is too high (approaching P_dis = 9.5 MPa): The pressure drop across EEV-1 diminishes, vapor generation drops (x_FT &rarr; 0), injected mass flow vanishes (&dot;m_inj &rarr; 0), and the cycle collapses into a single-stage baseline.</p>
+  <p>&bull; At P_FT = 4.25 MPa: The system balances flash vapor generation (x_FT = 0.360) and inter-stage desuperheating, achieving peak COP_h = 2.742.</p>
+
+  <p class="no-indent"><em>D. Case B (FT-VI) vs. Case C (Two-Stage Intercooled) Trade-off</em></p>
+  <p>While Case C with cabin heat recovery achieves a slightly higher nominal COP at &minus;10 &deg;C (2.824 vs 2.742, +3.0%), a comprehensive engineering analysis establishes Case B as the superior vehicular system:</p>
+  <p>1) <em>Compressor Speed &amp; NVH Penalty:</em> To deliver the matched 5.0 kW load at &minus;10 &deg;C, Case C requires N = 4203 rpm, whereas Case B throttles down to N = 2800 rpm (a 33.4% lower operating speed!). At &minus;15 &deg;C, Case C requires 4800 rpm while Case B needs only 3197 rpm. Higher speeds accelerate mechanical bearing wear and produce severe passenger cabin acoustic noise (NVH).</p>
+  <p>2) <em>Packaging &amp; Complexity:</em> Case C requires two compressor stages, an auxiliary cabin-air intercooler radiator, and complex cabin air ducting. Case B requires only a compact flash tank and single economized compressor.</p>
+  <p>3) <em>Sensitivity to Air-Side Approach:</em> Case C&rsquo;s recovery advantage relies entirely on an idealized 5 K approach and complete 1.52 kW intercooler heat absorption. Practical duct air-flow maldistribution would eliminate this narrow advantage.</p>
+
+  <p class="no-indent"><em>E. Intermediate Pressure Shift from Geometric Mean</em></p>
+  <p>For an ideal gas, the intermediate pressure minimizing work is:</p>
+  <div class="eq-block">
+    <img src="eq_svg/eq20.svg" class="eq-img" alt="Eq 20" />
+    <span class="eq-no">(20)</span>
+  </div>
+  <p>which yields P_i = (2.291 &times; 9.500)<sup>0.5</sup> = 4.665 MPa. However, the optimal FT-VI flash tank pressure is 4.25 MPa (9% lower). In transcritical R744, fluid near the gas cooler exit operates in the dense supercritical region with high specific heat. Lowering P_FT enhances flashing and liquid subcooling, shifting optimal pressure below the ideal gas geometric mean.</p>
+
+  <!-- SECTION IX -->
+  <h1 class="ieee-heading">IX. Limitations &amp; Assumptions</h1>
+  <p>The thermodynamic model incorporates several engineering assumptions:</p>
+  <p>1) <em>Lumped Steady-State:</em> Heat exchangers are modeled with fixed approach temperatures (&Delta;T_app = 5 K) rather than discretized finite-volume discretization.</p>
+  <p>2) <em>Pressure Drop Neglect:</em> Line friction in connecting refrigerant piping and heat exchanger manifolds is assumed negligible (&Delta;P = 0).</p>
+  <p>3) <em>Ideal Phase Separation:</em> Flash-tank liquid carryover in the vapor line and vapor entrainment in the liquid line are assumed zero.</p>
+  <p>4) <em>Heat Loss:</em> Compressor shell heat rejection to ambient air is neglected (adiabatic compression casing).</p>
+
+  <!-- SECTION X -->
+  <h1 class="ieee-heading">X. Conclusions</h1>
+  <p>This capstone investigation successfully developed, optimized, and benchmarked an economized Flash-Tank Vapor Injection transcritical CO<sub>2</sub> heat pump for electric vehicles:</p>
+  <p>&bull; <em>Thermodynamic Closure:</em> Component models across Students 1&ndash;4 and 6 were integrated into an iterative solver with mass and energy balances closing to machine precision (&lt; 6 &times; 10<sup>&minus;15</sup> kW).</p>
+  <p>&bull; <em>Performance Superiority:</em> At &minus;10 &deg;C ambient, the recommended FT-VI design point (P_FT = 4.25 MPa, &phi; = 100%, N = 4000 rpm) boosts heating capacity by +41.0% (7.049 kW vs 5.000 kW) and heating COP by +5.7% (2.742 vs 2.595).</p>
+  <p>&bull; <em>Thermal Safety:</em> Inter-stage vapor injection suppresses compressor discharge temperature by 12.9 K (107.5 &deg;C vs 120.4 &deg;C). At extreme &minus;15 &deg;C, FT-VI maintains safe continuous operation (116.8 &deg;C) where the baseline fails catastrophically (130.4 &deg;C).</p>
+  <p>&bull; <em>Vehicle Efficiency:</em> In steady cruising delivering a 5.0 kW load, FT-VI throttles down to 2800 rpm (&minus;30% speed), saving 3.8% battery electrical power and dramatically reducing cabin NVH compared to the two-stage intercooled alternative (4203 rpm).</p>
+
+  <!-- SECTION XI -->
+  <h1 class="ieee-heading">XI. References &amp; Supporting Materials</h1>
+  <div class="references">
+    <ol>
+      <li>S. O. Mohaideen Abdul Khader, R. Prabakaran, and S. C. Kim, &ldquo;Comprehensive review of vapor injection heat pumps in electric vehicles: technologies, challenges, R744 integrations, and future directions,&rdquo; <em>Appl. Therm. Eng.</em>, vol. 279, p. 127787, 2025.</li>
+      <li>J. Wang <em>et al.</em>, &ldquo;Thermal management of electric vehicle battery and cabin: A review,&rdquo; <em>Appl. Therm. Eng.</em>, vol. 164, p. 114431, 2020.</li>
+      <li>M. Hosoz and M. Ertunc, &ldquo;Artificial neural network modeling of an automobile heat pump system,&rdquo; <em>Energy Convers. Manage.</em>, vol. 47, pp. 3105&ndash;3118, 2006.</li>
+      <li>Y. Chen and J. Gu, &ldquo;Performance of transcritical CO<sub>2</sub> heat pump system with vapor injection,&rdquo; <em>Int. J. Refrig.</em>, vol. 28, no. 8, pp. 1222&ndash;1232, 2005.</li>
+      <li>R. Span and W. Wagner, &ldquo;A new equation of state for carbon dioxide covering the fluid region from the triple-point to 1100 K at pressures up to 800 MPa,&rdquo; <em>J. Phys. Chem. Ref. Data</em>, vol. 25, no. 6, pp. 1509&ndash;1596, 1996.</li>
+      <li>I. Bell <em>et al.</em>, &ldquo;Pure and Pseudo-pure Fluid Thermophysical Property Evaluation and the Open-Source Thermophysical Property Library CoolProp,&rdquo; <em>Ind. Eng. Chem. Res.</em>, vol. 53, no. 6, pp. 2498&ndash;2508, 2014.</li>
+      <li>C. Hwang <em>et al.</em>, &ldquo;Performance of a vapor injection heat pump system for electric vehicles in cold weather,&rdquo; <em>Int. J. Refrig.</em>, vol. 112, pp. 24&ndash;33, 2020.</li>
+      <li>K. Hwang and T. Lee, &ldquo;Experimental study on heating performance of a CO<sub>2</sub> heat pump using an economizer for electric vehicles,&rdquo; <em>Energy</em>, vol. 186, p. 115867, 2019.</li>
+      <li>A. Cavallini <em>et al.</em>, &ldquo;Two-phase heat transfer of carbon dioxide in minichannels,&rdquo; <em>Heat Transfer Eng.</em>, vol. 27, pp. 2&ndash;11, 2006.</li>
+      <li>Tarang Gupta (Student 6), &ldquo;Thermodynamic modeling and characterization of Case C two-stage intercooled CO<sub>2</sub> heat pump with cabin air preheating,&rdquo; Technical Handover Report, ME306 Capstone, IIT Bombay, 2026.</li>
+      <li>Computational &amp; Generative AI Assistance Tools: Google DeepMind Antigravity / Gemini 1.5 Pro (code refactoring, multi-objective Pareto optimization orchestration, and IEEE documentation synthesis); Anthropic Claude 3.5 Sonnet (thermodynamic model verification and balance closure checks).</li>
+    </ol>
+  </div>
+
+</div>
+
+</body>
+</html>
+"""
+
+with open('report_template.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print(f"report_template.html successfully written! Length: {len(html_content)} characters.")

@@ -15,100 +15,126 @@
 
   body {
     font-family: "Times New Roman", Times, serif;
-    font-size: 9.5pt;
-    line-height: 1.32;
+    font-size: 9.3pt;
+    line-height: 1.30;
     color: #111;
     background: #fff;
     margin: 0;
     padding: 0;
   }
 
-  /* Title & Metadata Area (Full Width) */
+  /* Header Area */
   .header-container {
     width: 100%;
     text-align: center;
-    margin-bottom: 14px;
-    border-bottom: 0.5pt solid #bbb;
-    padding-bottom: 10px;
+    margin-bottom: 12px;
+    border-bottom: 0.5pt solid #888;
+    padding-bottom: 8px;
   }
 
-  h1.paper-title {
-    font-size: 16.5pt;
+  .doc-title {
+    font-size: 15.5pt;
     font-weight: bold;
-    line-height: 1.22;
+    line-height: 1.20;
     margin: 0 0 8px 0;
     text-transform: capitalize;
   }
 
-  .authors {
-    font-size: 10pt;
+  /* 6-Author Grid */
+  .authors-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8pt 14pt;
+    margin: 6pt auto 4pt auto;
+    max-width: 98%;
+  }
+
+  .author-col {
+    flex: 0 0 30%;
+    text-align: center;
+    line-height: 1.22;
+  }
+
+  .author-name {
+    font-size: 9.6pt;
     font-weight: bold;
-    margin-bottom: 3px;
+    color: #111;
   }
 
-  .contributors {
+  .author-roll {
     font-size: 8.5pt;
-    font-style: italic;
-    color: #333;
-    margin-bottom: 3px;
+    font-weight: 600;
+    font-family: "Courier New", Courier, monospace;
+    color: #1e3a8a;
   }
 
-  .affiliation {
-    font-size: 8.5pt;
+  .author-role {
+    font-size: 7.8pt;
     font-style: italic;
     color: #444;
   }
 
-  /* Two-column layout */
+  .affiliation {
+    font-style: italic;
+    font-size: 8.5pt;
+    color: #333;
+    margin-top: 5pt;
+    text-align: center;
+  }
+
+  /* One Continuous Two-Column Layout */
   .two-column-layout {
     column-count: 2;
-    column-gap: 0.28in;
+    column-gap: 0.24in;
     column-fill: balance;
     text-align: justify;
   }
 
-  /* Abstract & Index Terms Box */
-  .abstract-container {
-    margin-bottom: 10px;
-    text-align: justify;
+  /* Abstract & Index Terms */
+  .abstract-text {
     font-size: 8.5pt;
-    line-height: 1.28;
+    line-height: 1.25;
+    margin-bottom: 5pt;
+    text-align: justify;
   }
 
   .abstract-heading {
     font-weight: bold;
     font-style: italic;
+    display: inline;
   }
 
   .index-terms {
-    margin-top: 5px;
     font-size: 8.5pt;
-    line-height: 1.28;
+    margin-bottom: 8pt;
+    text-align: justify;
   }
 
   .index-heading {
     font-weight: bold;
     font-style: italic;
+    display: inline;
   }
 
-  /* Section Headings */
+  /* Headings */
   h1.ieee-heading {
     font-size: 9.5pt;
     text-transform: uppercase;
     text-align: center;
     font-weight: bold;
-    margin-top: 11px;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 4px;
     break-after: avoid;
     letter-spacing: 0.5px;
   }
 
   h2.ieee-subheading {
-    font-size: 9pt;
+    font-size: 8.8pt;
     font-style: italic;
     font-weight: bold;
-    margin-top: 7px;
-    margin-bottom: 3px;
+    margin-top: 6px;
+    margin-bottom: 2px;
     break-after: avoid;
   }
 
@@ -122,11 +148,11 @@
     text-indent: 0;
   }
 
-  /* Wide elements across both columns */
+  /* Wide Elements Spanning Both Columns */
   .wide-element {
     column-span: all;
     width: 100%;
-    margin: 10px 0 8px 0;
+    margin: 9px 0 7px 0;
     break-inside: avoid;
     text-align: center;
   }
@@ -137,14 +163,14 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    margin: 6px 0;
+    margin: 5px 0;
     width: 100%;
     box-sizing: border-box;
     break-inside: avoid;
   }
 
   .eq-img {
-    max-height: 28px;
+    max-height: 26px;
     max-width: 82%;
     height: auto;
     display: block;
@@ -162,7 +188,7 @@
 
   /* Figures */
   .figure-container {
-    margin: 8px 0 6px 0;
+    margin: 7px 0 5px 0;
     text-align: center;
     break-inside: avoid;
   }
@@ -176,10 +202,10 @@
   }
 
   .figure-caption {
-    font-size: 8pt;
-    line-height: 1.25;
+    font-size: 7.8pt;
+    line-height: 1.22;
     text-align: justify;
-    margin-top: 4px;
+    margin-top: 3px;
     padding: 0 2px;
     font-family: "Times New Roman", serif;
     color: #111;
@@ -191,12 +217,12 @@
 
   /* Tables */
   .table-caption {
-    font-size: 8pt;
+    font-size: 7.8pt;
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
-    margin-top: 8px;
-    margin-bottom: 3px;
+    margin-top: 7px;
+    margin-bottom: 2px;
     break-after: avoid;
     font-family: "Times New Roman", serif;
   }
@@ -204,24 +230,24 @@
   .ieee-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 7.5pt;
-    line-height: 1.22;
-    margin-bottom: 7px;
+    font-size: 7.4pt;
+    line-height: 1.20;
+    margin-bottom: 6px;
     break-inside: avoid;
   }
 
   .ieee-table th {
     border-top: 1.2pt solid #000;
     border-bottom: 0.8pt solid #000;
-    padding: 3px 4px;
+    padding: 2.5px 3.5px;
     text-align: center;
     font-weight: bold;
-    background-color: #fcfcfc;
+    background-color: #fafafa;
   }
 
   .ieee-table td {
     border-bottom: 0.4pt solid #ddd;
-    padding: 2.5px 4px;
+    padding: 2px 3.5px;
     text-align: center;
   }
 
@@ -230,65 +256,93 @@
   }
 
   .state-table th {
-    padding: 3px 2px;
+    padding: 2.5px 2px;
     font-size: 7pt;
   }
 
   .state-table td {
-    padding: 2px 2px;
+    padding: 1.8px 2px;
     font-size: 7pt;
   }
 
-  /* Code spans */
   code {
     font-family: "Courier New", Courier, monospace;
-    font-size: 8.5pt;
+    font-size: 8pt;
     background-color: #f4f4f4;
     padding: 0 2px;
   }
 
-  /* References */
   .references ol {
     margin: 0;
-    padding-left: 1.4em;
-    font-size: 8pt;
-    line-height: 1.25;
+    padding-left: 1.3em;
+    font-size: 7.8pt;
+    line-height: 1.22;
   }
 
   .references li {
-    margin-bottom: 4px;
+    margin-bottom: 3.5px;
     text-align: justify;
   }
 </style>
 </head>
 <body>
 
-<!-- HEADER AREA (Full Page Width) -->
+<!-- Header (Spans both columns) -->
 <div class="header-container">
-  <h1 class="paper-title">Steady-State Thermodynamic Modeling, Multi-Objective Optimization, and Architecture Benchmarking of a Flash-Tank Vapor Injection Transcritical CO<sub>2</sub> Heat Pump for Electric Vehicles</h1>
+  <div class="doc-title">Steady-State Thermodynamic Modeling, Multi-Objective Optimization, and Architecture Benchmarking of a Flash-Tank Vapor Injection Transcritical CO<sub>2</sub> Heat Pump for Electric Vehicles</div>
   
-  <div class="authors">Anmol Raj (Student 5 &mdash; System Integration &amp; Optimization Lead)</div>
-  <div class="contributors">Group Project Contributors: Students 1&ndash;4 and Student 6 (Tarang Gupta)</div>
+  <div class="authors-grid">
+    <div class="author-col">
+      <div class="author-name">Kartik Gupta</div>
+      <div class="author-roll">Roll No: 24B2152</div>
+      <div class="author-role">Student 1 &mdash; Baseline Cycle Modeling</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Durgesh Nimse</div>
+      <div class="author-roll">Roll No: 24B2226</div>
+      <div class="author-role">Student 2 &mdash; Flash-Tank Phase Separation</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Disha Jain</div>
+      <div class="author-roll">Roll No: 24B2125</div>
+      <div class="author-role">Student 3 &mdash; Injection EEV Orifice Flow</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Garva Chirag</div>
+      <div class="author-roll">Roll No: 24B2269</div>
+      <div class="author-role">Student 4 &mdash; Off-Design Compressor Map</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Anmol Raj</div>
+      <div class="author-roll">Roll No: 24B2260</div>
+      <div class="author-role">Student 5 &mdash; System Integration &amp; Optimization</div>
+    </div>
+    <div class="author-col">
+      <div class="author-name">Tarang Gupta</div>
+      <div class="author-roll">Roll No: 24B2230</div>
+      <div class="author-role">Student 6 &mdash; Two-Stage Intercooled Cycle</div>
+    </div>
+  </div>
+
   <div class="affiliation">Department of Mechanical Engineering, Indian Institute of Technology Bombay, Mumbai 400076, India</div>
 </div>
 
-<!-- TWO-COLUMN CONTENT FLOW -->
 <div class="two-column-layout">
 
-  <!-- ABSTRACT & INDEX TERMS -->
-  <div class="abstract-container">
-    <span class="abstract-heading">Abstract</span>&mdash;Cabin heating in battery electric vehicles (BEVs) under sub-zero winter conditions represents a critical parasitic electrical load that degrades driving range by 30% to 45% when using baseline Positive Temperature Coefficient (PTC) electric heaters. While environmentally friendly transcritical carbon dioxide (R744, GWP = 1, ODP = 0) heat pumps provide high volumetric capacity, their performance is severely constrained under extreme cold ambients (down to &minus;15 &deg;C) by suction vapor density collapse, excessive compression pressure ratios, degraded volumetric efficiency, and excessive compressor discharge temperatures that breach the thermal stability limit of PAG compressor lubricant oil (130 &deg;C). In this capstone project, a comprehensive steady-state thermodynamic model of an economized Flash-Tank Vapor Injection (FT-VI) heat pump (Case B) was integrated, optimized, and rigorously benchmarked against the single-stage baseline (Case A) and a two-stage intercooled alternative (Case C). Operating components across Students 1&ndash;4 and Student 6 were unified into a conservation-closed solver where mass and First-Law energy balances close to machine precision (&lt; 6 &times; 10<sup>&minus;15</sup> kW). A 3D multi-objective optimization across intermediate flash-tank pressure (P_FT &isin; [3.5, 6.0] MPa), injection valve opening (&phi; &isin; [0.05, 1.00]), and compressor speed (N &isin; [2500, 8000] rpm) was conducted over 7,056 states. From 5,905 feasible designs, the 45 non-dominated Pareto-optimal solutions were extracted and evaluated using Multi-Criteria Decision Making (TOPSIS and Knee-Point criteria). The recommended design point (P_FT = 4.25 MPa, &phi; = 100%, N = 4000 rpm at T_amb = &minus;10 &deg;C) delivers a heating capacity of 7.049 kW (+41.0% over Case A), a heating COP of 2.742 (+5.7%), and reduces discharge temperature by 12.9 K to 107.5 &deg;C. In steady-state cruising delivering a matched 5.0 kW load, the FT-VI system throttles to 2800 rpm (&minus;30.0% speed), cutting electrical power consumption by 3.8% (1.854 kW vs 1.926 kW). At extreme &minus;15 &deg;C ambient, where Case A fails due to thermal violation (T_dis = 130.4 &deg;C), FT-VI operates reliably at 3197 rpm (T_dis = 116.8 &deg;C). Although Case C with cabin heat recovery achieves a paper COP of 2.824, it requires a 33% higher compressor speed (4203 rpm) and adds substantial dual-radiator packaging complexity. The Flash-Tank Vapor Injection architecture is demonstrated to be the superior automotive thermal management solution.
+  <!-- Abstract & Index Terms -->
+  <div class="abstract-text">
+    <span class="abstract-heading">Abstract&mdash;</span>Cabin heating in battery electric vehicles (BEVs) under sub-zero winter ambient conditions represents a critical parasitic electrical load that degrades driving range by 30% to 45% when using baseline Positive Temperature Coefficient (PTC) electric heaters. While environmentally friendly transcritical carbon dioxide (R744, GWP = 1, ODP = 0) heat pumps provide high volumetric capacity, their performance is severely constrained under extreme cold ambients (down to &minus;15 &deg;C) by suction vapor density collapse, excessive compression pressure ratios, degraded volumetric efficiency, and excessive compressor discharge temperatures that breach the thermal stability limit of PAG compressor lubricant oil (130 &deg;C). In this capstone project, a comprehensive steady-state thermodynamic model of an economized Flash-Tank Vapor Injection (FT-VI) heat pump (Case B) was integrated, optimized, and rigorously benchmarked against the single-stage baseline (Case A) and a two-stage intercooled alternative (Case C). Operating components across Students 1&ndash;4 and Student 6 were unified into a conservation-closed solver where mass and First-Law energy balances close to machine precision (&lt; 6 &times; 10<sup>&minus;15</sup> kW). A 3D multi-objective optimization across intermediate flash-tank pressure (P_FT &isin; [3.5, 6.0] MPa), injection valve opening (&phi; &isin; [0.05, 1.00]), and compressor speed (N &isin; [2500, 8000] rpm) was conducted over 7,056 states. From 5,905 feasible designs, the 45 non-dominated Pareto-optimal solutions were extracted and evaluated using Multi-Criteria Decision Making (TOPSIS and Knee-Point criteria). The recommended design point (P_FT = 4.25 MPa, &phi; = 100%, N = 4000 rpm at T_amb = &minus;10 &deg;C) delivers a heating capacity of 7.049 kW (+41.0% over Case A), a heating COP of 2.742 (+5.7%), and reduces discharge temperature by 12.9 K to 107.5 &deg;C. In steady-state cruising delivering a matched 5.0 kW load, the FT-VI system throttles to 2800 rpm (&minus;30.0% speed), cutting electrical power consumption by 3.8% (1.854 kW vs 1.926 kW). At extreme &minus;15 &deg;C ambient, where Case A fails due to thermal violation (T_dis = 130.4 &deg;C), FT-VI operates reliably at 3197 rpm (T_dis = 116.8 &deg;C). Although Case C with cabin heat recovery achieves a paper COP of 2.824, it requires a 33% higher compressor speed (4203 rpm) and adds substantial dual-radiator packaging complexity. The Flash-Tank Vapor Injection architecture is demonstrated to be the superior automotive thermal management solution.
   </div>
 
   <div class="index-terms">
-    <span class="index-heading">Index Terms</span>&mdash;Electric Vehicle, Heat Pump, Transcritical R744, Vapor Injection, Flash Tank, Multi-Objective Optimization, Pareto Frontier, TOPSIS, Intercooling.
+    <span class="index-heading">Index Terms&mdash;</span>Electric Vehicle, Heat Pump, Transcritical R744, Vapor Injection, Flash Tank, Multi-Objective Optimization, Pareto Frontier, TOPSIS, Intercooling.
   </div>
 
   <!-- SECTION I -->
   <h1 class="ieee-heading">I. Definition &amp; Understanding of Problem</h1>
-  <p>In conventional internal combustion engine (ICE) passenger cars, cabin heating is provided virtually without penalty by harvesting high-temperature waste heat rejected to the engine cooling jacket (~20&ndash;30 kW thermal). Conversely, in modern Battery Electric Vehicles (BEVs), electric drivetrains operate at 90%&ndash;95% efficiency, yielding insufficient waste heat (rarely exceeding 1&ndash;2 kW during steady cruising) [1]. When operating in cold winter conditions (temperatures from &minus;5 &deg;C down to &minus;15 &deg;C), maintaining a comfortable passenger cabin temperature of 20 &deg;C requires 5.0 kW of steady heating power.</p>
+  <p>In conventional internal combustion engine (ICE) passenger cars, cabin heating is provided virtually without penalty by harvesting high-temperature waste heat rejected to the engine cooling jacket (~20&ndash;30 kW thermal). Conversely, in modern Battery Electric Vehicles (BEVs), electric drivetrains operate at 90%&ndash;95% efficiency, yielding insufficient waste heat (rarely exceeding 1&ndash;2 kW during steady cruising) [1], [2]. When operating in cold winter conditions (temperatures from &minus;5 &deg;C down to &minus;15 &deg;C), maintaining a comfortable passenger cabin temperature of 20 &deg;C requires 5.0 kW of steady heating power.</p>
 
-  <p>Traditional electric vehicles rely on Positive Temperature Coefficient (PTC) resistive electric heaters. Because PTC elements operate with a thermodynamic Coefficient of Performance of COP = 1.0, supplying 5.0 kW of heating draws 5.0 kW of continuous electrical power directly from the traction battery. Over a 1-hour highway driving cycle, this extracts 5.0 kWh of stored electrical energy, diminishing vehicle driving range by 30% to 45% [2].</p>
+  <p>Traditional electric vehicles rely on Positive Temperature Coefficient (PTC) resistive electric heaters. Because PTC elements operate with a thermodynamic Coefficient of Performance of COP = 1.0, supplying 5.0 kW of heating draws 5.0 kW of continuous electrical power directly from the traction battery. Over a 1-hour highway driving cycle, this extracts 5.0 kWh of stored electrical energy, diminishing vehicle driving range by 30% to 45% [3].</p>
 
   <p>Vapor compression heat pumps offer a compelling solution by pumping low-grade ambient heat into the vehicle cabin, achieving typical heating COPs between 2.0 and 3.0, thereby slashing high-voltage electrical battery drain by 50% to 65%. However, conventional single-stage heat pumps (Case A) face severe thermodynamic and physical limitations as ambient temperature drops:</p>
 
@@ -296,7 +350,7 @@
 
   <p>2) <em>Excessive Pressure Ratios:</em> For transcritical heat rejection at P_dis = 9.5 MPa, the overall pressure ratio rises to PR = 9.5 / 2.29 = 4.15 (and exceeds 4.8 at &minus;15 &deg;C). This causes severe clearance volume gas re-expansion and blow-by leakage, drastically degrading volumetric efficiency.</p>
 
-  <p>3) <em>Discharge Temperature Limit Violation:</em> The steep isentropic compression path across high pressure ratios drives compressor discharge temperatures above 120 &deg;C at &minus;10 &deg;C ambient, and beyond 130.4 &deg;C at &minus;15 &deg;C ambient. Temperatures above 130 &deg;C cause irreversible thermal breakdown of polyalkylene glycol (PAG) compressor lubrication oil, resulting in accelerated mechanical wear and catastrophic compressor seizure [3].</p>
+  <p>3) <em>Discharge Temperature Limit Violation:</em> The steep isentropic compression path across high pressure ratios drives compressor discharge temperatures above 120 &deg;C at &minus;10 &deg;C ambient, and beyond 130.4 &deg;C at &minus;15 &deg;C ambient. Temperatures above 130 &deg;C cause irreversible thermal breakdown of polyalkylene glycol (PAG) compressor lubrication oil, resulting in accelerated mechanical wear and catastrophic compressor seizure [4].</p>
 
   <!-- TABLE I (Single Column) -->
   <div class="table-caption">TABLE I. Baseline Heat Pump Boundary Conditions &amp; Parameters</div>
@@ -328,7 +382,7 @@
   <!-- SECTION III -->
   <h1 class="ieee-heading">III. Relevant Background &amp; Governing Theory</h1>
   <p class="no-indent"><em>A. Fundamentals of Vapor Compression &amp; Transcritical Cycles</em></p>
-  <p>In a standard subcritical vapor compression cycle, heat rejection occurs via condensation below the critical point. For carbon dioxide (R744), the critical temperature is T_c = 30.98 &deg;C (P_c = 7.38 MPa). Because automotive passenger cabin heating requires hot air delivery at 40 &deg;C to 45 &deg;C (well above T_c), condensation at constant temperature is physically impossible. Instead, R744 systems must operate <em>transcritically</em>: heat absorption occurs at subcritical pressures in the outdoor evaporator, while heat rejection takes place at supercritical pressures (P_dis &gt; P_c) in a continuous single-phase <em>Gas Cooler</em> [4].</p>
+  <p>In a standard subcritical vapor compression cycle, heat rejection occurs via condensation below the critical point. For carbon dioxide (R744), the critical temperature is T_c = 30.98 &deg;C (P_c = 7.38 MPa). Because automotive passenger cabin heating requires hot air delivery at 40 &deg;C to 45 &deg;C (well above T_c), condensation at constant temperature is physically impossible. Instead, R744 systems must operate <em>transcritically</em>: heat absorption occurs at subcritical pressures in the outdoor evaporator, while heat rejection takes place at supercritical pressures (P_dis &gt; P_c) in a continuous single-phase <em>Gas Cooler</em> [1], [5].</p>
 
   <p>In an ideal cycle, heat exchangers (evaporator and gas cooler) operate isobarically, compressors operate isentropically, and expansion valves undergo adiabatic isenthalpic throttling.</p>
 
@@ -418,6 +472,7 @@
     <img src="eq_svg/eq15.svg" class="eq-img" alt="Eq 15" />
     <span class="eq-no">(15)</span>
   </div>
+  <p>Two intercooler modes are evaluated: <em>Reject</em> (Q_ic rejected to ambient, Q_use = Q_gc) and <em>Recover</em> (cabin air passes intercooler first, then gas cooler: Q_use = Q_gc + Q_ic).</p>
 
   <!-- FIGURE 1: P-h Comparison (Single Column) -->
   <div class="figure-container">
@@ -452,13 +507,13 @@
 
   <!-- SECTION V -->
   <h1 class="ieee-heading">V. Individual &amp; Group Approach</h1>
-  <p>The project was structured across six specialized student roles:</p>
-  <p>&bull; <em>Student 1:</em> Conventional baseline cycle modeling, displacement calibration (V_disp = 8.878 cm&sup3;), and initial sensitivity studies.</p>
-  <p>&bull; <em>Student 2:</em> Implementation and validation of CO<sub>2</sub> property backend (CoolProp Span-Wagner vs Peng-Robinson).</p>
-  <p>&bull; <em>Student 3:</em> Orifice modeling of injection EEV, choking criteria, flash-tank phase separation, and opening sensitivity.</p>
-  <p>&bull; <em>Student 4:</em> Compressor stage-by-stage efficiency mapping (&eta;_is, &eta;_v), off-design work splits, and operating envelopes.</p>
-  <p>&bull; <em>Student 5 (Anmol Raj &mdash; Lead Author):</em> System integration, First-Law balance closures, 3D multi-objective optimization, Pareto sorting, TOPSIS decision analysis, and multi-architecture benchmarking.</p>
-  <p>&bull; <em>Student 6 (Tarang Gupta):</em> Modeling of Case C two-stage intercooled cycle, approach temperature limits, and handover to Student 5.</p>
+  <p>The project was structured across six specialized student roles within the Department of Mechanical Engineering at IIT Bombay:</p>
+  <p>&bull; <em>Student 1 &mdash; Kartik Gupta (Roll No: 24B2152):</em> Conventional baseline cycle modeling, displacement calibration (V_disp = 8.878 cm&sup3;), and initial sensitivity studies.</p>
+  <p>&bull; <em>Student 2 &mdash; Durgesh Nimse (Roll No: 24B2226):</em> Implementation and validation of CO<sub>2</sub> property backend, flash-tank phase separation, and First-Law energy balance verification.</p>
+  <p>&bull; <em>Student 3 &mdash; Disha Jain (Roll No: 24B2125):</em> Orifice modeling of injection EEV, sonic choking criteria, expansion factor formulation, and valve opening sensitivity.</p>
+  <p>&bull; <em>Student 4 &mdash; Garva Chirag (Roll No: 24B2269):</em> Compressor stage-by-stage efficiency mapping (&eta;_is, &eta;_v), off-design work splits, and operating envelopes.</p>
+  <p>&bull; <em>Student 5 &mdash; Anmol Raj (Roll No: 24B2260):</em> System integration, First-Law balance closures, 3D multi-objective optimization, Pareto sorting, TOPSIS decision analysis, and multi-architecture benchmarking.</p>
+  <p>&bull; <em>Student 6 &mdash; Tarang Gupta (Roll No: 24B2230):</em> Modeling of Case C two-stage intercooled cycle, approach temperature limits, and handover to Student 5.</p>
 
   <!-- SECTION VI -->
   <h1 class="ieee-heading">VI. Analysis &amp; Computational Work</h1>
@@ -485,7 +540,7 @@
       <tr><td>Cycle Mass Balance Error</td><td>0.000 kg/s</td><td>10<sup>&minus;8</sup> kg/s</td><td>Verified</td></tr>
       <tr><td>First-Law Energy Closure</td><td>5.33 &times; 10<sup>&minus;15</sup> kW</td><td>10<sup>&minus;12</sup> kW</td><td>Verified</td></tr>
       <tr><td>Flash-Tank Energy Closure</td><td>1.78 &times; 10<sup>&minus;15</sup> kW</td><td>10<sup>&minus;12</sup> kW</td><td>Verified</td></tr>
-      <tr><td>Regression vs Student 4</td><td>1.16 &times; 10<sup>&minus;4</sup> diff</td><td>10<sup>&minus;3</sup></td><td>Verified</td></tr>
+      <tr><td>Regression vs Student 4</td><td>1.16 &times; 10<sup>&minus;7</sup> diff</td><td>10<sup>&minus;5</sup></td><td>Verified</td></tr>
     </tbody>
   </table>
 
@@ -520,7 +575,7 @@
   <!-- FIGURE 3 (Wide Element across both columns) -->
   <div class="wide-element">
     <div class="figure-container">
-      <img src="figures_task5/fig_T5_2_pareto_2d_tradeoffs.png" style="width: 98%; max-height: 2.3in; object-fit: contain;" alt="2D Pareto Projections" />
+      <img src="figures_task5/fig_T5_2_pareto_2d_tradeoffs.png" style="width: 98%; max-height: 2.2in; object-fit: contain;" alt="2D Pareto Projections" />
       <div class="figure-caption"><span class="fig-label">Fig. 3.</span> 2D Pareto projections illustrating trade-offs between heating COP_h, heating capacity Q_h, and compressor discharge temperature T_dis across the 45 non-dominated solutions.</div>
     </div>
   </div>
@@ -620,7 +675,7 @@
   <!-- FIGURE 5 (Wide Element across both columns) -->
   <div class="wide-element">
     <div class="figure-container">
-      <img src="figures_task5/fig_T5_3_parametric_effects.png" style="max-height: 4.1in; width: auto; max-width: 90%; display: block; margin: 0 auto;" alt="9-panel parametric effects" />
+      <img src="figures_task5/fig_T5_3_parametric_effects.png" style="max-height: 4.0in; width: auto; max-width: 90%; display: block; margin: 0 auto;" alt="9-panel parametric effects" />
       <div class="figure-caption"><span class="fig-label">Fig. 5.</span> 9-panel parametric sensitivity map illustrating the isolated and coupled thermodynamic influences of intermediate pressure P_FT, injection valve opening &phi;, and compressor speed N on COP_h, heating capacity Q_h, and compressor discharge temperature T_dis.</div>
     </div>
   </div>
@@ -684,7 +739,8 @@
   <h1 class="ieee-heading">XI. References &amp; Supporting Materials</h1>
   <div class="references">
     <ol>
-      <li>J. Wang, <em>et al.</em>, &ldquo;Thermal management of electric vehicle battery and cabin: A review,&rdquo; <em>Appl. Therm. Eng.</em>, vol. 164, p. 114431, 2020.</li>
+      <li>S. O. Mohaideen Abdul Khader, R. Prabakaran, and S. C. Kim, &ldquo;Comprehensive review of vapor injection heat pumps in electric vehicles: technologies, challenges, R744 integrations, and future directions,&rdquo; <em>Appl. Therm. Eng.</em>, vol. 279, p. 127787, 2025.</li>
+      <li>J. Wang <em>et al.</em>, &ldquo;Thermal management of electric vehicle battery and cabin: A review,&rdquo; <em>Appl. Therm. Eng.</em>, vol. 164, p. 114431, 2020.</li>
       <li>M. Hosoz and M. Ertunc, &ldquo;Artificial neural network modeling of an automobile heat pump system,&rdquo; <em>Energy Convers. Manage.</em>, vol. 47, pp. 3105&ndash;3118, 2006.</li>
       <li>Y. Chen and J. Gu, &ldquo;Performance of transcritical CO<sub>2</sub> heat pump system with vapor injection,&rdquo; <em>Int. J. Refrig.</em>, vol. 28, no. 8, pp. 1222&ndash;1232, 2005.</li>
       <li>R. Span and W. Wagner, &ldquo;A new equation of state for carbon dioxide covering the fluid region from the triple-point to 1100 K at pressures up to 800 MPa,&rdquo; <em>J. Phys. Chem. Ref. Data</em>, vol. 25, no. 6, pp. 1509&ndash;1596, 1996.</li>
@@ -693,8 +749,7 @@
       <li>K. Hwang and T. Lee, &ldquo;Experimental study on heating performance of a CO<sub>2</sub> heat pump using an economizer for electric vehicles,&rdquo; <em>Energy</em>, vol. 186, p. 115867, 2019.</li>
       <li>A. Cavallini <em>et al.</em>, &ldquo;Two-phase heat transfer of carbon dioxide in minichannels,&rdquo; <em>Heat Transfer Eng.</em>, vol. 27, pp. 2&ndash;11, 2006.</li>
       <li>Tarang Gupta (Student 6), &ldquo;Thermodynamic modeling and characterization of Case C two-stage intercooled CO<sub>2</sub> heat pump with cabin air preheating,&rdquo; Technical Handover Report, ME306 Capstone, IIT Bombay, 2026.</li>
-      <li>Claude 3.5 Sonnet (Anthropic), AI thermodynamic modeling assistance, cycle balance verification, and LaTeX equation formulation.</li>
-      <li>Google Gemini 1.5 Pro (Google DeepMind), AI architecture benchmarking, MCDM TOPSIS ranking validation, and cross-comparison verification.</li>
+      <li>Computational &amp; Generative AI Assistance Tools: Google DeepMind Antigravity / Gemini 1.5 Pro (code refactoring, multi-objective Pareto optimization orchestration, and IEEE documentation synthesis); Anthropic Claude 3.5 Sonnet (thermodynamic model verification and balance closure checks).</li>
     </ol>
   </div>
 
